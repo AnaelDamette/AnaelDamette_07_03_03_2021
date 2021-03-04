@@ -1,0 +1,44 @@
+$primary: rgb(141, 141, 141);
+$secondary: rgb(214, 214, 214);
+
+.rounded-pill {
+    opacity: 0.95;
+    transition: opacity 0.5s;
+    &:hover,
+    &:focus {
+        opacity: 1;
+    }
+}
+.img-nav {
+    max-height: 70px;
+}
+a {
+    color: #707070;
+    &:hover,
+    &:focus {
+        color: #505050 !important;
+        border: #505050;
+    }
+}
+p {
+    color: #606060 !important;
+    font-size: 1.4em;
+}
+
+.footer {
+    position : absolute;
+    bottom:0;
+    width: 100%;
+}
+.text-footer {
+    font-size : 1em;
+}
+
+.bg-light {
+    background-image: url(../img/bulle.jpg)
+}
+
+//Modifier le Scss au dessus des imports !!
+
+@import "node_modules/bootstrap/scss/bootstrap.scss";
+@import "node_modules/bootstrap-vue/src/index.scss";
