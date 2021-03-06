@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <HelloWorld msg="Bienvenue chez Groupo'twit"/>
+    <HelloWorld msg="Bienvenue chez Groupomania" />
   </div>
 </template>
 

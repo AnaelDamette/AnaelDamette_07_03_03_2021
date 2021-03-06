@@ -1,9 +1,9 @@
 <template>
   <div class="about container">
-    <h1 class="bg-light rounded-pill text-center p-3 mb-3 text-secondary">
+    <h1 class="bg-blue rounded-pill text-center p-3 mb-3 text-secondary">
       À propos de Groupo'twit
     </h1>
-    <div class="jumbotron rounded">
+    <div class="jumbotron rounded shadow-box opacity mt-6 m-auto">
       <p class="">
         <strong>Groupo'twit</strong> est un réseau social de l'entreprise
         <strong>Groupomania</strong>.

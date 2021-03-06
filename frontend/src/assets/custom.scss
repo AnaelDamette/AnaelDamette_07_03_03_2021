@@ -1,41 +1,70 @@
-$primary: rgb(141, 141, 141);
-$secondary: rgb(214, 214, 214);
+//import de mon scss
+
+
+@import "./variable.scss";
+
+.shadow-text {
+    @include shadow-text;
+    &:hover, &:focus {
+        @include shadow-text-hover;
+    }
+}
+.shadow-box {
+    @include shadow-box;
+    &:hover, &:focus {
+        @include shadow-box-hover;
+    }
+}
 
 .rounded-pill {
-    opacity: 0.95;
     transition: opacity 0.5s;
     &:hover,
     &:focus {
-        opacity: 1;
+        @include shadow-box-hover;
     }
 }
 .img-nav {
     max-height: 70px;
+    @include shadow-rounded;
+    &:hover, &:focus {
+        @include shadow-rounded-hover;
+    }
 }
 a {
-    color: #707070;
+    color:$text-grey;
     &:hover,
     &:focus {
-        color: #505050 !important;
-        border: #505050;
+        color: $text-grey-hover !important;
+        border: $text-grey-hover;
+        text-decoration:none!important;
     }
 }
 p {
-    color: #606060 !important;
+    color: $text-grey !important;
     font-size: 1.4em;
 }
 
 .footer {
-    position : absolute;
-    bottom:0;
+    position: absolute;
+    bottom: 0;
     width: 100%;
 }
 .text-footer {
-    font-size : 1em;
+    font-size: 1em;
+    color: $text-black !important;
 }
 
-.bg-light {
-    background-image: url(../img/bulle.jpg)
+.bg-blue {
+    background: linear-gradient(-330deg,$bg-2 0.5%, $bg-1 30%) !important;
+    @include shadow-box;
+}
+body {
+ background-image: url(../img/background.jpg);
+ object-fit: cover;
+    
+}
+.opacity {
+    opacity: 0.95!important;
 }
 
 //Modifier le Scss au dessus des imports !!

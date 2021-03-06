@@ -1,0 +1,37 @@
+$primary: rgb(141, 141, 141);
+$secondary: rgb(214, 214, 214);
+$bg-1: #d62803;
+$bg-2:#ffd7d7;
+$text-grey: #707070;
+$text-grey-hover: #505050;
+$text-black: black;
+
+@mixin shadow-box-hover {
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3), 0 0 20px rgba(0, 0, 0, 0.1) inset;
+    -webkit-box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3), 0 0 20px rgba(0, 0, 0, 0.1) inset;
+    -moz-box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3), 0 0 20px rgba(0, 0, 0, 0.1) inset;
+}
+@mixin shadow-box {
+    -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 20px rgba(0, 0, 0, 0.1) inset;
+    -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 20px rgba(0, 0, 0, 0.1) inset;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 20px rgba(0, 0, 0, 0.1) inset;
+}
+@mixin shadow-rounded {
+    @include shadow-box;
+    border-radius: 100px;
+}
+@mixin shadow-rounded-hover {
+    @include shadow-box-hover;
+    border-radius: 100px;
+}
+
+@mixin shadow-text {
+    -webkit-text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 20px rgba(0, 0, 0, 0.1) ;
+    -moz-text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 20px rgba(0, 0, 0, 0.1) ;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 20px rgba(0, 0, 0, 0.1);
+}
+@mixin shadow-text-hover {
+    text-shadow: 0 3px 8px rgba(0, 0, 0, 0.3), 0 0 20px rgba(0, 0, 0, 0.1) ;
+    -webkit-text-shadow: 0 3px 8px rgba(0, 0, 0, 0.3), 0 0 20px rgba(0, 0, 0, 0.1) ;
+    -moz-text-shadow: 0 3px 8px rgba(0, 0, 0, 0.3), 0 0 20px rgba(0, 0, 0, 0.1) ;
+}
