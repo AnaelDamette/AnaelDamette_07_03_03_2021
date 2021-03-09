@@ -11,7 +11,7 @@
             type="email"
             class="form-control"
             id="inputEmail"
-            v-model="dataSignup.email"
+            v-model="dataSignup.mail"
           />
         </div>
         <div class="form-group">
@@ -20,7 +20,7 @@
             type="text"
             class="form-control"
             id="inputUsername"
-            v-model="dataSignup.username"
+            v-model="dataSignup.pseudo"
           />
         </div>
         <div class="form-group">
@@ -46,16 +46,60 @@
   </div>
 </template>
 <script>
+import { mapState } from "vuex";
+import axios from "axios";
 export default {
   name: "SignUp",
   data() {
     return {
       dataSignup: {
-        username: null,
-        email: null,
+        pseudo: null,
+        mail: null,
         password: null,
       },
+      msg: "",
     };
+  },
+  computed: {
+    ...mapState(["user"]),
+  },
+  methods: {
+    sendSignup() {
+      console.log(
+        "test N°1 je suis dans sendSignup " +
+          this.dataSignup.mail +
+          " " +
+          this.dataSignup.pseudo +
+          " " +
+          this.dataSignup.password
+      );
+      const url = "http://localhost:3000/api/auth/signup";
+      const regexPassword = /\D/;
+      //const regexPassword = /((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W]).{6,64})/; regex Password avec 1 charactère spécial 1 majuscule minimum
+      const regexEmail = /^[a-z0-9!#$ %& '*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&' * +/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/g;
+      const usernameRegex = /^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{0,29}$/;
+      if (
+        (this.dataSignup.mail !== null ||
+          this.dataSignup.pseudo !== null ||
+          this.dataSignup.password !== null) &&
+        regexPassword.test(this.dataSignup.password) &&
+        regexEmail.test(this.dataSignup.mail) &&
+        usernameRegex.test(this.dataSignup.pseudo)
+      ) {
+        axios
+          .post(url, this.dataSignup)
+          .then((response) => {
+            console.log(response);
+            //Réinitialisation
+            this.dataSignup.mail = null;
+            this.dataSignup.pseudo = null;
+            this.dataSignup.password = null;
+          })
+          .catch((error) => console.log("voici l'erreur : " + error));
+      } else {
+        alert("Un problème, lors du renseignement du document");
+      }
+    },
   },
 };
 </script>
