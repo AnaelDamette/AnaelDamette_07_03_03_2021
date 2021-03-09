@@ -4,19 +4,19 @@ const userRoutes = require('./routes/user.js');
 //const postRoutes = require('./routes/post.js');
 const path = require('path');
 const app = express();
-const mysql = require('mysql');
+const { Sequelize } = require('sequelize');
 
-const db = mysql.createConnection({
-    host: "localhost",
-    user: "groupoAdmin",
-    password: "Pourquoi"
+const sequelize = new Sequelize("GroupoTwit", "groupoAdmin", "pourquoi", {
+    dialect: "mysql",
+    host: "localhost"
 });
 
-db.connect(function(err) {
-    if(err) throw err;
-    console.log("Vous êtes connecté à la base de donnée de Groupo'Twit");
-})
-
+try {
+    sequelize.authenticate();
+    console.log('Connecté à la base de données MySQL!');
+  } catch (error) {
+    console.error('Impossible de se connecter, erreur suivante :', error);
+  }
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');

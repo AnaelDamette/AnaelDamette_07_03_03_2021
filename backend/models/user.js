@@ -1,9 +1,8 @@
 
-const userSchema = mongoose.Schema({
-    email: { type: String, required: true, unique: true},
-    pseudo: {type : String, required: true, unique: true},
-    password: { type: String, required: true }
-});
-
-
-module.exports = model('User', userSchema); 
+module.exports = (sequelize, DataTypes) => {
+    const User = sequelize.define('User', {
+      email: DataTypes.STRING,
+      username: DataTypes.STRING,
+      password: DataTypes.STRING,
+      isAdmin: DataTypes.BOOLEAN
+    }, {})};
