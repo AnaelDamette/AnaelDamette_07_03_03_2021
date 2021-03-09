@@ -1,10 +1,10 @@
 <template>
   <div class="container">
-    <form class="row d-flex jumbotron shadow-box opacity mt-6 m-auto">
-      <div class="col-6 p-3 d-flex justify-content-center">
+    <form class="row d-flex jumbotron shadow-box opacity ml-auto mr-auto mt-5">
+      <div class="col-sm-6 p-3 d-flex justify-content-center">
         <figure><img src="../img/icon-above-font.png" class="w-75" /></figure>
       </div>
-      <div class="col-6 p-3 d-flex flex-column justify-content-center">
+      <div class="col-sm-6 p-3 d-flex flex-column justify-content-center">
         <div class="form-group">
           <label for="inputUsername"><p class="m-0">Pseudo</p></label>
           <input

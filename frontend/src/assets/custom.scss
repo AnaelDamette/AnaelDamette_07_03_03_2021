@@ -30,6 +30,9 @@
         @include shadow-rounded-hover;
     }
 }
+h1 {
+    font-size : 2rem!important;
+}
 a {
     color:$text-grey;
     &:hover,
@@ -51,16 +54,20 @@ p {
 }
 .text-footer {
     font-size: 1em;
-    color: $text-black !important;
+    color: $secondary !important;
 }
 
 .bg-blue {
-    background: linear-gradient(-330deg,$bg-2 0.5%, $bg-1 30%) !important;
+    background: $bg-1;
+    background-image: radial-gradient(circle,$bg-1 80%, $primary 100%);
+
     @include shadow-box;
 }
 body {
  background-image: url(../img/background.jpg);
- object-fit: cover;
+ background-repeat: no-repeat;
+ background-size: cover;
+ background-attachment: fixed;
     
 }
 .opacity {
