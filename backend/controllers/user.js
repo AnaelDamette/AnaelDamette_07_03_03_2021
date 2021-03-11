@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const User = require('../models/user.js');
 const jwt = require('jsonwebtoken');
+const models = require('../models')
 
 var crypto = require('crypto'),
     algorithm = 'aes-256-ctr',
@@ -16,12 +17,13 @@ function encrypt(text){
 exports.signup = (req, res, next) => {
   bcrypt.hash(req.body.password, 10)
     .then(hash => {
-      let user = new User({
-        email: encrypt(req.body.email),
-        password: hash
-      });
-      user.save()
-        .then(() => res.status(201).json({ message: 'Utilisateur crée !' }))
+      let newUser = models.User.create({
+        pseudo : req.body.pseudo,
+        mail: encrypt(req.body.mail),
+        password: hash,
+        isAdmin : false
+      })
+        .then(newUser => res.status(201).json({ 'Utilisateur crée ! id : ': newUser.id }))
         .catch(error => {res.status(400).json({ error })});
     })
     .catch(error => res.status(500).json({ error }));

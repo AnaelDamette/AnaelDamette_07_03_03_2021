@@ -1,5 +1,5 @@
-const url = "http://localhost:3000/api";
-
+//const url = "http://localhost:3000/api";
+import axios from "axios";
 import Vue from 'vue'
 import Vuex from 'vuex'
 
@@ -30,14 +30,14 @@ export default new Vuex.Store({
             Authorization: "Bearer " + localStorage.getItem("token")
           }
         })
-      //.get("http://localhost:3000/api/post",this.$store.state.headerParams)
-      .then(response => {
-        console.log('réponse API', response);
-        context.commit('saveUserInfos', [response.data.username, response.data.id, response.data.email, response.data.isAdmin])
-      })
-      .catch(error => {
-        console.log('Erreur auth', error); //affiche pas le message 'normalement' envoyé par le back
-      });
+        //.get("http://localhost:3000/api/post",this.$store.state.headerParams)
+        .then(response => {
+          console.log('réponse API', response);
+          context.commit('saveUserInfos', [response.data.username, response.data.id, response.data.email, response.data.isAdmin])
+        })
+        .catch(error => {
+          console.log('Erreur auth', error); //affiche pas le message 'normalement' envoyé par le back
+        });
     },
   },
   modules: {

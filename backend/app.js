@@ -4,13 +4,13 @@ const userRoutes = require('./routes/user.js');
 //const postRoutes = require('./routes/post.js');
 const path = require('path');
 const app = express();
-const { Sequelize } = require('sequelize');
+const { Sequelize, sequelize } = require('./models')
 
-const sequelize = new Sequelize("GroupoTwit", "groupoAdmin", "pourquoi", {
-    dialect: "mysql",
-    host: "localhost"
-});
+async function main() {
+  await sequelize.sync({ force:true })
+}
 
+main()
 try {
     sequelize.authenticate();
     console.log('Connecté à la base de données MySQL!');

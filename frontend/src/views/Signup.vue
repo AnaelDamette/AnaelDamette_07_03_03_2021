@@ -56,6 +56,7 @@ export default {
         pseudo: null,
         mail: null,
         password: null,
+        isAdmin: false
       },
       msg: "",
     };
