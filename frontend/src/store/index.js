@@ -5,22 +5,27 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
-export default new Vuex.Store({
+const store = new Vuex.Store({
   state: {
     User: {
       pseudo: 'Nc',
       userID: 'Nc',
       mail: 'Nc',
+      token: null,
       isAdmin: false,
     }
   },
   mutations: {
     saveUserInfos(state, [pseudo, userId, mail, isAdmin]) {
-      state.user.pseudo = pseudo,
-        state.user.userId = userId,
-        state.user.mail = mail,
-        state.user.isAdmin = isAdmin
+      state.User.pseudo = pseudo,
+        state.User.userId = userId,
+        state.User.mail = mail,
+        
+      state.User.isAdmin = isAdmin
     },
+    saveToken(state) {
+      state.User.token = localStorage.getItem('token')
+    }
   },
   actions: {
     getUserInfos(context) {
@@ -30,16 +35,16 @@ export default new Vuex.Store({
             Authorization: "Bearer " + localStorage.getItem("token")
           }
         })
-        //.get("http://localhost:3000/api/post",this.$store.state.headerParams)
         .then(response => {
           console.log('réponse API', response);
-          context.commit('saveUserInfos', [response.data.username, response.data.id, response.data.email, response.data.isAdmin])
+          context.commit('saveUserInfos', [response.data.pseudo, response.data.id, response.data.mail, response.data.isAdmin])
         })
         .catch(error => {
-          console.log('Erreur auth', error); //affiche pas le message 'normalement' envoyé par le back
+          console.log('Erreur auth', error); 
         });
     },
   },
   modules: {
   }
 });
+export default store

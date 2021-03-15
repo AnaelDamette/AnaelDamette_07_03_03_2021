@@ -25,10 +25,12 @@ module.exports = (sequelize, DataTypes) => {
     pseudo: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique : true
     },
     mail: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique : true
     },
     password: {
       type: DataTypes.STRING,

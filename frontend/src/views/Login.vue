@@ -11,7 +11,7 @@
             type="text"
             class="form-control"
             id="inputUsername"
-            v-model="dataLogin.username"
+            v-model="dataLogin.pseudo"
           />
         </div>
         <div class="form-group">
@@ -38,15 +38,44 @@
 </template>
 
 <script>
+import axios from "axios";
+import { mapState } from "vuex";
+import store from "../store/index";
+import router from "../router/index"
+
 export default {
   name: "SignUp",
   data() {
     return {
       dataLogin: {
-        username: null,
+        pseudo: null,
         password: null,
       },
+      msg: "",
     };
+  },
+  computed: {
+    ...mapState(["User"]),
+  },
+  methods: {
+    logIn() {
+      if (
+        this.dataLogin.pseudo !== null ||
+        this.dataLogin.password !== null
+      ) {
+        axios
+          .post("http://localhost:3000/api/auth/login", this.dataLogin)
+          .then((response) => {
+            localStorage.setItem("token", response.data.token);
+            store.commit("saveToken");
+            router.push('/')
+          })
+          .catch((error) => console.log(error));
+        console.log(store.state.User);
+      } else {
+        console.log("Une petite erreur ici !");
+      }
+    },
   },
 };
 </script>

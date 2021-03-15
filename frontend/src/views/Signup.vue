@@ -48,6 +48,7 @@
 <script>
 import { mapState } from "vuex";
 import axios from "axios";
+import router from "../router/index";
 export default {
   name: "SignUp",
   data() {
@@ -56,13 +57,13 @@ export default {
         pseudo: null,
         mail: null,
         password: null,
-        isAdmin: false
+        isAdmin: false,
       },
       msg: "",
     };
   },
   computed: {
-    ...mapState(["user"]),
+    ...mapState(["User"]),
   },
   methods: {
     sendSignup() {
@@ -79,10 +80,11 @@ export default {
       //const regexPassword = /((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W]).{6,64})/; regex Password avec 1 charactère spécial 1 majuscule minimum
       const regexEmail = /^[a-z0-9!#$ %& '*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&' * +/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/g;
       const usernameRegex = /^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{0,29}$/;
+
       if (
-        (this.dataSignup.mail !== null ||
-          this.dataSignup.pseudo !== null ||
-          this.dataSignup.password !== null) &&
+        (this.dataSignup.mail) &&
+        (this.dataSignup.pseudo) &&
+        (this.dataSignup.password) &&
         regexPassword.test(this.dataSignup.password) &&
         regexEmail.test(this.dataSignup.mail) &&
         usernameRegex.test(this.dataSignup.pseudo)
@@ -91,12 +93,15 @@ export default {
           .post(url, this.dataSignup)
           .then((response) => {
             console.log(response);
-            //Réinitialisation
-            this.dataSignup.mail = null;
-            this.dataSignup.pseudo = null;
-            this.dataSignup.password = null;
+            router.push("/Login");
           })
-          .catch((error) => console.log("voici l'erreur : " + error));
+          .catch((error) => {
+            if (error.response.status == 409) {
+              alert("L'utilisateur existe déjà !");
+            } else {
+              console.log(error.status + " " + "voici l'erreur : " + error);
+            }
+          });
       } else {
         alert("Un problème, lors du renseignement du document");
       }

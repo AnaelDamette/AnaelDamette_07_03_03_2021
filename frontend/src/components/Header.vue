@@ -5,20 +5,31 @@
           <img class="img-nav" src="../img/icon-black.png" />
           </router-link>
           <div class="d-flex justify-content-around">
-            <router-link to=/login  v-if="true == true" class="nav-item p-1 text-secondary shadow-text"> Connexion </router-link>
-            <router-link to=/signup  v-if=" true==true" class="nav-item p-1 text-secondary shadow-text">Inscription </router-link>            
-            <router-link to=/wall  v-if="true == false" class="nav-item p-1 text-secondary shadow-text"> Actus </router-link>
-            <router-link to=/wall/post v-if="true == false" class="nav-item p-1 text-secondary shadow-text">Mes Posts </router-link>
+            <router-link to=/login  v-if="User.token == null" class="nav-item p-1 text-secondary shadow-text"> Connexion </router-link>
+            <router-link to=/signup  v-if=" User.token == null" class="nav-item p-1 text-secondary shadow-text">Inscription </router-link>            
+            <router-link to=/profil  v-if="User.token != null" class="nav-item p-1 text-secondary shadow-text"> Profil </router-link>
+            <router-link to=/post v-if="User.token !=null" class="nav-item p-1 text-secondary shadow-text">Poster </router-link>
+            <button type="button" v-if="User.token !=null" class="nav-item btn p-1 text-secondary shadow-text" @click="disconnect">Disconnect</button>
           </div>
       </div>
     </header>
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
-  name: "Header",
-  props: {
-    msg: String,
-  }
-}
+  //   name: "Header",
+  //   props: {
+  //     msg: String,
+  //   },
+  computed: {
+    ...mapState(["User"]),
+  },
+  methods: {
+    disconnect() {
+      localStorage.clear();
+      location.replace("/");
+    },
+  },
+};
 </script>

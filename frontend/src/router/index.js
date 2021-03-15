@@ -29,15 +29,15 @@ const routes = [
     component: () => import(/* webpackChunkName: "signup" */ '../views/Signup.vue')
   },
   {
-    path: '/wall',
-    name: 'Wall',
-    component: () => import(/* webpackChunkName: "wall" */ '../views/Wall.vue')
+    path: '/profil',
+    name: 'profil',
+    component: () => import(/* webpackChunkName: "wall" */ '../views/Profil.vue')
   },
-  // {
-  //   path: '/wall/post',
-  //   name:'Post',
-  //   component: () => import(/* webpackChunkName: "post" */ '../views/Post.vue')
-  // },
+   {
+     path: '/post',
+     name:'Post',
+     component: () => import(/* webpackChunkName: "post" */ '../views/Post.vue')
+   }
 ]
 
 const router = new VueRouter({
