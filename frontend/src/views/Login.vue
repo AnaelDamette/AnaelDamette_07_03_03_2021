@@ -67,13 +67,14 @@ export default {
           .post("http://localhost:3000/api/auth/login", this.dataLogin)
           .then((response) => {
             localStorage.setItem("token", response.data.token);
+            localStorage.setItem("uuid", response.data.uuid);
             store.commit("saveToken");
-            console.log(response.data.email)
-            store.commit("saveUserInfos", [response.data.username, response.data.id, response.data.email, response.data.isAdmin])
+            console.log(response.data.uuid)
+            store.commit("saveUserInfos", [response.data.username, response.data.uuid, response.data.email, response.data.isAdmin])
             router.push('/')
           })
           .catch((error) => console.log(error));
-        console.log(store.state.User);
+        console.log("store.state.User.uuid" + " " + store.state.User);
       } else {
         console.log("Une petite erreur ici !");
       }

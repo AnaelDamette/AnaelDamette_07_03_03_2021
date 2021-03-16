@@ -105,13 +105,12 @@ exports.login = (req, res, next) => {
             return res.status(403).json({ error: 'Mot de passe incorrect !' });
           }
           res.status(200).json({
-            userId: user.uuid,
+            uuid: user.uuid,
             email: decrypt(user.email),
             isAdmin: user.isAdmin,
-            userId: user.uuid,
             username: user.username,
             token: jwt.sign(
-              { userId: user._id },
+              { uuid: user.uuid },
               'RANDOM_TOKEN_SECRET',
               { expiresIn: '24h' }
             )
@@ -135,3 +134,27 @@ exports.userProfil = (req, res, next) => {
       .catch(error => res.status(500).json(error))
 };
 
+//supprimer le profil
+exports.deleteProfile = (req, res, next) => {
+
+  let uuid = req.params.uuid;
+  console.log(uuid)
+  models.User.findOne({
+    where : { uuid }
+  })
+  .then(user => {
+    console.log("test du Usericitte " + "  "+ user)
+    if (user !=null) {
+      models.User
+      .destroy({
+        where: { uuid }
+      })
+      .then(() => res.end())
+      .catch(err => console.log(err))
+    } else {
+      res.status(401).json({ error: "Cet user n'existe pas"})
+    }
+  }).catch(err => res.status(404).json(err))
+}
+
+//changer le password
