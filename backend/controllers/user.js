@@ -3,12 +3,18 @@ const User = require('../models/user.js');
 const jwt = require('jsonwebtoken');
 const models = require('../models');
 let verifInput = require('../utils/verifInputs');
-//let utils = require('../utils/jwtUtils');
 const e = require('express');
 
 var crypto = require('crypto'),
   algorithm = 'aes-256-ctr',
   password = 'aes-256-ctr';
+
+  function decrypt(text){
+    var decipher = crypto.createDecipher(algorithm,password)
+    var dec = decipher.update(text,'hex','utf8')
+    dec += decipher.final('utf8');
+    return dec;
+  }
 
 function encrypt(text) {
   var cipher = crypto.createCipher(algorithm, password)
@@ -19,22 +25,22 @@ function encrypt(text) {
 
 exports.signup = (req, res, next) => {
   // Valider les paramètres de la requète
-  let mail = encrypt(req.body.mail);
+  let email = encrypt(req.body.email);
   let username = req.body.username;
   let password = req.body.password;
 
-  if (mail == null || username == null || password == null) {
+  if (email == null || username == null || password == null) {
     res.status(400).json({ error: 'il manque un paramètre' })
   }
 
   //TO DO => Vérification des saisies user
-  let mailOk = verifInput.validEmail(req.body.mail);
-  console.log("verif mail " + mailOk)
+  let emailOk = verifInput.validEmail(req.body.email);
+  console.log("verif email " + emailOk)
   let mdpOK = verifInput.validPassword(password);
   console.log("verif mdp " + mdpOK)
   let usernameOk = verifInput.validUsername(username);
   console.log("verif username " + usernameOk)
-  if (mailOk == true && mdpOK == true && usernameOk == true) {
+  if (emailOk == true && mdpOK == true && usernameOk == true) {
     //Vérification si user n'existe pas déjà
     //TO DO => Vérifier l'username et l'email
     models.User.findOne({
@@ -43,12 +49,12 @@ exports.signup = (req, res, next) => {
     })
       .then(() => {
         models.User.findOne({
-          attributes: ['mail'],
-          where: { mail: mail }
+          attributes: ['email'],
+          where: { email: email }
         })
       })
       .catch(error => {
-        res.status(409).json({ error: 'mail' })
+        res.status(409).json({ error: 'email' })
       })
       .then(user => {
         if (!user) {
@@ -56,7 +62,7 @@ exports.signup = (req, res, next) => {
             .then(hash => {
               let newUser = models.User.create({
                 username: req.body.username,
-                mail: mail,
+                email: email,
                 password: hash,
                 isAdmin: false
               })
@@ -87,6 +93,7 @@ exports.login = (req, res, next) => {
   }
   models.User.findOne({
     where: { username }
+    
   })
     .then(user => {
       if (!user) {
@@ -98,7 +105,11 @@ exports.login = (req, res, next) => {
             return res.status(403).json({ error: 'Mot de passe incorrect !' });
           }
           res.status(200).json({
-            userId: user._id,
+            userId: user.uuid,
+            email: decrypt(user.email),
+            isAdmin: user.isAdmin,
+            userId: user.uuid,
+            username: user.username,
             token: jwt.sign(
               { userId: user._id },
               'RANDOM_TOKEN_SECRET',
@@ -112,13 +123,15 @@ exports.login = (req, res, next) => {
 };
 
 //obtenir le profil d'un utilisateur 
-exports.userProfil = (req, res) => {
-  let id = utils.getUserId(req.headers.authorization)
+exports.userProfil = (req, res, next) => {
+  
+  let username = req.body.username;
   models.User.findOne({
-      attributes: ['id', 'email', 'username','isAdmin'],
-      where: { id: id }
+      attributes: ['username'],
+      where: { username : username }
+      
   })
-      .then(user => res.status(200).json(user))
+      .then(User => res.status(200).json(User))
       .catch(error => res.status(500).json(error))
 };
 

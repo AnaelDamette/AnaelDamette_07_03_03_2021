@@ -1,5 +1,5 @@
 //const url = "http://localhost:3000/api";
-import axios from "axios";
+//import axios from "axios";
 import Vue from 'vue'
 import Vuex from 'vuex'
 
@@ -10,16 +10,16 @@ const store = new Vuex.Store({
     User: {
       username: 'Nc',
       userID: 'Nc',
-      mail: 'Nc',
+      email: 'Nc',
       token: null,
       isAdmin: false,
     }
   },
   mutations: {
-    saveUserInfos(state, [username, userId, mail, isAdmin]) {
+    saveUserInfos(state, [username, userId, email, isAdmin]) {
       state.User.username = username,
         state.User.userId = userId,
-        state.User.mail = mail,
+        state.User.email = email,
         
       state.User.isAdmin = isAdmin
     },
@@ -28,21 +28,21 @@ const store = new Vuex.Store({
     }
   },
   actions: {
-    getUserInfos(context) {
-      axios
-        .get("http://localhost:3000/api/user/me", {
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("token")
-          }
-        })
-        .then(response => {
-          console.log('réponse API', response);
-          context.commit('saveUserInfos', [response.data.username, response.data.id, response.data.mail, response.data.isAdmin])
-        })
-        .catch(error => {
-          console.log('Erreur auth', error); 
-        });
-    },
+    // getUserInfos(context) {
+    //   axios
+    //     .get("http://localhost:3000/api/auth/me", {
+    //       headers: {
+    //         Authorization: "Bearer " + localStorage.getItem("token")
+    //       }
+    //     })
+    //     .then(response => {
+    //       console.log('réponse API', response);
+    //       context.commit('saveUserInfos', [response.data.username, response.data.id, response.data.email, response.data.isAdmin])
+    //     })
+    //     .catch(error => {
+    //       console.log('Erreur auth', error); 
+    //     });
+    // },
   },
   modules: {
   }

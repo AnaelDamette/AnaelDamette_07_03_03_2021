@@ -19,5 +19,8 @@ export default {
   computed: {
     ...mapState(["User"]),
   },
+  mounted() {
+    this.$store.dispatch("getUserInfos");
+  }
 };
 </script>

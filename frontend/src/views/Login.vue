@@ -68,6 +68,8 @@ export default {
           .then((response) => {
             localStorage.setItem("token", response.data.token);
             store.commit("saveToken");
+            console.log(response.data.email)
+            store.commit("saveUserInfos", [response.data.username, response.data.id, response.data.email, response.data.isAdmin])
             router.push('/')
           })
           .catch((error) => console.log(error));

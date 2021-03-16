@@ -1,7 +1,7 @@
 module.exports = {
     validEmail: function (value) {
-        const regexMail = /^[a-z0-9!#$ %& '*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&' * +/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/g;
-        return regexMail.test(value)
+        const regexEmail = /^[a-z0-9!#$ %& '*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&' * +/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/g;
+        return regexEmail.test(value)
     },
     validPassword: function (value) {
         //8 caractères dont au minimum une majuscule, une minuscule, un caractère numérique et un caractère spécial

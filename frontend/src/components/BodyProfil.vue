@@ -11,7 +11,7 @@
           <p>Ton Compte : {{ User.username }}</p>
         </div>
         <div class="p-2 m-2">
-          <p>Ton mail : {{ User.mail }}</p>
+          <p>Ton email : {{ User.email }}</p>
         </div>
         <button class="p-2 m-2 btn btn-primary w-50">
           Changement de Mot de Passe

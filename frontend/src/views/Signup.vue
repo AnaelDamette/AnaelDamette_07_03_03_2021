@@ -11,7 +11,7 @@
             type="email"
             class="form-control"
             id="inputEmail"
-            v-model="dataSignup.mail"
+            v-model="dataSignup.email"
           />
         </div>
         <div class="form-group">
@@ -55,7 +55,7 @@ export default {
     return {
       dataSignup: {
         username: null,
-        mail: null,
+        email: null,
         password: null,
         isAdmin: false,
       },
@@ -69,7 +69,7 @@ export default {
     sendSignup() {
       console.log(
         "test N°1 je suis dans sendSignup " +
-          this.dataSignup.mail +
+          this.dataSignup.email +
           " " +
           this.dataSignup.username +
           " " +
@@ -82,11 +82,11 @@ export default {
       const usernameRegex = /^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{0,29}$/;
 
       if (
-        (this.dataSignup.mail) &&
+        (this.dataSignup.email) &&
         (this.dataSignup.username) &&
         (this.dataSignup.password) &&
         regexPassword.test(this.dataSignup.password) &&
-        regexEmail.test(this.dataSignup.mail) &&
+        regexEmail.test(this.dataSignup.email) &&
         usernameRegex.test(this.dataSignup.username)
       ) {
         axios
