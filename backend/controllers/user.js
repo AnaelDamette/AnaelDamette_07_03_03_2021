@@ -3,6 +3,7 @@ const User = require('../models/user.js');
 const jwt = require('jsonwebtoken');
 const models = require('../models');
 let verifInput = require('../utils/verifInputs');
+//let utils = require('../utils/jwtUtils');
 const e = require('express');
 
 var crypto = require('crypto'),
@@ -19,10 +20,10 @@ function encrypt(text) {
 exports.signup = (req, res, next) => {
   // Valider les paramètres de la requète
   let mail = encrypt(req.body.mail);
-  let pseudo = req.body.pseudo;
+  let username = req.body.username;
   let password = req.body.password;
 
-  if (mail == null || pseudo == null || password == null) {
+  if (mail == null || username == null || password == null) {
     res.status(400).json({ error: 'il manque un paramètre' })
   }
 
@@ -31,14 +32,14 @@ exports.signup = (req, res, next) => {
   console.log("verif mail " + mailOk)
   let mdpOK = verifInput.validPassword(password);
   console.log("verif mdp " + mdpOK)
-  let pseudoOk = verifInput.validUsername(pseudo);
-  console.log("verif pseudo " + pseudoOk)
-  if (mailOk == true && mdpOK == true && pseudoOk == true) {
+  let usernameOk = verifInput.validUsername(username);
+  console.log("verif username " + usernameOk)
+  if (mailOk == true && mdpOK == true && usernameOk == true) {
     //Vérification si user n'existe pas déjà
     //TO DO => Vérifier l'username et l'email
     models.User.findOne({
-      attributes: ['pseudo'],
-      where: { pseudo: pseudo }
+      attributes: ['username'],
+      where: { username: username }
     })
       .then(() => {
         models.User.findOne({
@@ -54,7 +55,7 @@ exports.signup = (req, res, next) => {
           bcrypt.hash(password, 10)
             .then(hash => {
               let newUser = models.User.create({
-                pseudo: req.body.pseudo,
+                username: req.body.username,
                 mail: mail,
                 password: hash,
                 isAdmin: false
@@ -78,14 +79,14 @@ exports.signup = (req, res, next) => {
   }
 }
 exports.login = (req, res, next) => {
-  let pseudo = req.body.pseudo;
+  let username = req.body.username;
   let password = req.body.password;
 
-  if (pseudo == null || password == null) {
+  if (username == null || password == null) {
     res.status(400).json({ error: "Le document n'est pas complet" })
   }
   models.User.findOne({
-    where: { pseudo }
+    where: { username }
   })
     .then(user => {
       if (!user) {
@@ -109,3 +110,15 @@ exports.login = (req, res, next) => {
     })
     .catch(error => res.status(500).json({ error }));
 };
+
+//obtenir le profil d'un utilisateur 
+exports.userProfil = (req, res) => {
+  let id = utils.getUserId(req.headers.authorization)
+  models.User.findOne({
+      attributes: ['id', 'email', 'username','isAdmin'],
+      where: { id: id }
+  })
+      .then(user => res.status(200).json(user))
+      .catch(error => res.status(500).json(error))
+};
+

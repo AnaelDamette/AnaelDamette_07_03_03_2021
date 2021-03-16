@@ -8,7 +8,7 @@
           Ton profil
         </h2>
         <div class="p-2 m-2">
-          <p>Ton Compte : {{ User.pseudo }}</p>
+          <p>Ton Compte : {{ User.username }}</p>
         </div>
         <div class="p-2 m-2">
           <p>Ton mail : {{ User.mail }}</p>

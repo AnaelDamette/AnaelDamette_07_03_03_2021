@@ -14,7 +14,7 @@ module.exports = {
         type: DataTypes.INTEGER,
         allowNull: false
       },
-      pseudo: {
+      username: {
         type: DataTypes.STRING,
         allowNull: false
       },

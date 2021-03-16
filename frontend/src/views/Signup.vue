@@ -15,12 +15,12 @@
           />
         </div>
         <div class="form-group">
-          <label for="inputUsername"><p class="m-0">Pseudo</p></label>
+          <label for="inputUsername"><p class="m-0">username</p></label>
           <input
             type="text"
             class="form-control"
             id="inputUsername"
-            v-model="dataSignup.pseudo"
+            v-model="dataSignup.username"
           />
         </div>
         <div class="form-group">
@@ -54,7 +54,7 @@ export default {
   data() {
     return {
       dataSignup: {
-        pseudo: null,
+        username: null,
         mail: null,
         password: null,
         isAdmin: false,
@@ -71,7 +71,7 @@ export default {
         "test N°1 je suis dans sendSignup " +
           this.dataSignup.mail +
           " " +
-          this.dataSignup.pseudo +
+          this.dataSignup.username +
           " " +
           this.dataSignup.password
       );
@@ -83,11 +83,11 @@ export default {
 
       if (
         (this.dataSignup.mail) &&
-        (this.dataSignup.pseudo) &&
+        (this.dataSignup.username) &&
         (this.dataSignup.password) &&
         regexPassword.test(this.dataSignup.password) &&
         regexEmail.test(this.dataSignup.mail) &&
-        usernameRegex.test(this.dataSignup.pseudo)
+        usernameRegex.test(this.dataSignup.username)
       ) {
         axios
           .post(url, this.dataSignup)

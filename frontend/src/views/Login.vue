@@ -6,12 +6,12 @@
       </div>
       <div class="col-sm-6 p-3 d-flex flex-column justify-content-center">
         <div class="form-group">
-          <label for="inputUsername"><p class="m-0">Pseudo</p></label>
+          <label for="inputUsername"><p class="m-0">username</p></label>
           <input
             type="text"
             class="form-control"
             id="inputUsername"
-            v-model="dataLogin.pseudo"
+            v-model="dataLogin.username"
           />
         </div>
         <div class="form-group">
@@ -48,7 +48,7 @@ export default {
   data() {
     return {
       dataLogin: {
-        pseudo: null,
+        username: null,
         password: null,
       },
       msg: "",
@@ -60,7 +60,7 @@ export default {
   methods: {
     logIn() {
       if (
-        this.dataLogin.pseudo !== null ||
+        this.dataLogin.username !== null ||
         this.dataLogin.password !== null
       ) {
         axios

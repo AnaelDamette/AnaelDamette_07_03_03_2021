@@ -8,7 +8,7 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
   state: {
     User: {
-      pseudo: 'Nc',
+      username: 'Nc',
       userID: 'Nc',
       mail: 'Nc',
       token: null,
@@ -16,8 +16,8 @@ const store = new Vuex.Store({
     }
   },
   mutations: {
-    saveUserInfos(state, [pseudo, userId, mail, isAdmin]) {
-      state.User.pseudo = pseudo,
+    saveUserInfos(state, [username, userId, mail, isAdmin]) {
+      state.User.username = username,
         state.User.userId = userId,
         state.User.mail = mail,
         
@@ -37,7 +37,7 @@ const store = new Vuex.Store({
         })
         .then(response => {
           console.log('réponse API', response);
-          context.commit('saveUserInfos', [response.data.pseudo, response.data.id, response.data.mail, response.data.isAdmin])
+          context.commit('saveUserInfos', [response.data.username, response.data.id, response.data.mail, response.data.isAdmin])
         })
         .catch(error => {
           console.log('Erreur auth', error); 
