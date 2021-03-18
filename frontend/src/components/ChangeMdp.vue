@@ -25,7 +25,7 @@
           />
         </div>
         <button
-          @click:prevent="changePassword"
+          @click="changePassword"
           type="button"
           class="p-2 m-2 btn btn-success w-50"
         >
@@ -56,26 +56,26 @@ export default {
     ...mapState(["User"]),
   },
   methods: {
-    changePassword() {
+    test()  {
+      console.log("test")
+    },
+    changePassword: function() {
+      console.log('Bien dans la fonction changePassword')
       if (
         this.changePwd.newPassword == this.changePwd.RepeatNewPassword &&
         this.changePwd.newPassword != "" &&
         this.changePwd.RepeatNewPassword != ""
       ) {
+        let uuid = localStorage.getItem("uuid");
+        console.log(this.changePwd.newPassword)
         axios
           .put(
-            "http://localhost:3000/api/user/update",
-            {
-              newPassword: this.changePwd.newPassword,
-            },
-            {
-              headers: {
-                Authorization: "Bearer " + localStorage.getItem("token"),
-              },
-            }
-          )
+            
+            "http://localhost:3000/api/auth/update/" + uuid, { newPassword: this.changePwd.newPassword })
+
           .then((response) => {
             console.log("pwd change", response);
+            this.revele = false;
           })
           .catch((err) => {
             console.log("admin", err);

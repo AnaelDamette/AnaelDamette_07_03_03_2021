@@ -32,7 +32,7 @@
         </div>
         <textarea
           type="text"
-          v-model="contentPost.content"
+          v-model="contentPost.message"
           class="form-control mt-2"
           id="input_text"
           rows="8"
@@ -51,15 +51,39 @@
   </div>
 </template>
 <script>
+import { mapState } from "vuex"
+import axios from "axios"
+import router from "../router/index"
 export default {
   name: "CreatePost",
   data() {
     return {
       contentPost: {
-        content: null,
+        message: null,
         titre: null,
       },
+      msgError:""
     };
   },
+  computed: {
+    ...mapState(["user", "editOption"])
+  },
+  methods: {
+    createPost() {
+      console.log(this.contentPost);
+      let uuid = localStorage.getItem("uuid");
+      if (this.contentPost.message != null && this.contentPost.titre != null) {
+        axios
+        .post("http://localhost:3000/api/post/create/" + uuid, this.contentPost)
+        .then(response => {
+          if(response) {
+            router.push('/');
+          }
+        })
+        .catch(error => (this.msgError = error))
+      }
+
+    },
+  }
 };
 </script>

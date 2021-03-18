@@ -9,12 +9,19 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate(models) {
+    static associate({ post }) {
+      this.hasMany(post, {
+        foreignKey: 'userId', as: 'post'
+      })
       // define association here
-      //models.User.hasMany(models.post)
+      // models.User.hasMany(models.Post, {
+      //   foreignKey: {
+      //     allowNull :false
+      //   }
+      // })
     }
-    toJSON(){
-      return { ...this.get(), id: undefined }
+    toJSON() {
+      return { ...this.get(), id: undefined, userId: undefined }
     }
   };
   User.init({
@@ -25,12 +32,12 @@ module.exports = (sequelize, DataTypes) => {
     username: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique : true
+      unique: true
     },
     email: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique : true
+      unique: true
     },
     password: {
       type: DataTypes.STRING,

@@ -1,14 +1,14 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const userRoutes = require('./routes/user.js');
-//const postRoutes = require('./routes/post.js');
+const postRoutes = require('./routes/post.js');
 const path = require('path');
 const app = express();
 const { Sequelize, sequelize } = require('./models')
 
-async function main() {
-  await sequelize.sync({ force:true })
-}
+ async function main() {
+   await sequelize.authenticate({ force:true })
+ }
 
 main()
 try {
@@ -28,6 +28,6 @@ app.use(bodyParser.json());
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
 app.use('/api/auth', userRoutes);
-//app.use('/api/post', postRoutes);
+app.use('/api/post', postRoutes);
 
 module.exports = app;

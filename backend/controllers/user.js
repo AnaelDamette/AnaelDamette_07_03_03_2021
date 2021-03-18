@@ -1,5 +1,5 @@
 const bcrypt = require('bcrypt');
-const User = require('../models/user.js');
+//const User = require('../models/user.js');
 const jwt = require('jsonwebtoken');
 const models = require('../models');
 let verifInput = require('../utils/verifInputs');
@@ -9,12 +9,12 @@ var crypto = require('crypto'),
   algorithm = 'aes-256-ctr',
   password = 'aes-256-ctr';
 
-  function decrypt(text){
-    var decipher = crypto.createDecipher(algorithm,password)
-    var dec = decipher.update(text,'hex','utf8')
-    dec += decipher.final('utf8');
-    return dec;
-  }
+function decrypt(text) {
+  var decipher = crypto.createDecipher(algorithm, password)
+  var dec = decipher.update(text, 'hex', 'utf8')
+  dec += decipher.final('utf8');
+  return dec;
+}
 
 function encrypt(text) {
   var cipher = crypto.createCipher(algorithm, password)
@@ -68,7 +68,7 @@ exports.signup = (req, res, next) => {
               })
                 .then(newUser => {
                   res.status(201).json({ 'Utilisateur crée ! id : ': newUser.id })
-                  
+
                 })
                 .catch(error => {
                   res.status(409).json({ error: 'test pour voir sinon' })
@@ -93,7 +93,7 @@ exports.login = (req, res, next) => {
   }
   models.User.findOne({
     where: { username }
-    
+
   })
     .then(user => {
       if (!user) {
@@ -123,15 +123,16 @@ exports.login = (req, res, next) => {
 
 //obtenir le profil d'un utilisateur 
 exports.userProfil = (req, res, next) => {
-  
+
   let username = req.body.username;
   models.User.findOne({
-      attributes: ['username'],
-      where: { username : username }
-      
+    attributes: ['username'],
+    where: { username: username },
+    include: 'posts',
+
   })
-      .then(User => res.status(200).json(User))
-      .catch(error => res.status(500).json(error))
+    .then(User => res.status(200).json(User))
+    .catch(error => res.status(500).json(error))
 };
 
 //supprimer le profil
@@ -140,21 +141,57 @@ exports.deleteProfile = (req, res, next) => {
   let uuid = req.params.uuid;
   console.log(uuid)
   models.User.findOne({
-    where : { uuid }
+    where: { uuid }
   })
-  .then(user => {
-    console.log("test du Usericitte " + "  "+ user)
-    if (user !=null) {
-      models.User
-      .destroy({
-        where: { uuid }
-      })
-      .then(() => res.end())
-      .catch(err => console.log(err))
-    } else {
-      res.status(401).json({ error: "Cet user n'existe pas"})
-    }
-  }).catch(err => res.status(404).json(err))
+    .then(user => {
+      console.log("test du Usericitte " + "  " + user)
+      if (user != null) {
+        models.post
+        .destroy({
+          where: {userId: user.id}
+        })
+        .then(() =>{models.User
+          .destroy({
+            where: { uuid }
+          })
+          .then(() => res.end())
+          .catch(err => console.log(err))
+        })
+        .catch(err =>res.status(500).json(err))
+        
+      } else {
+        res.status(401).json({ error: "Cet user n'existe pas" })
+      }
+    }).catch(err => res.status(404).json(err))
 }
 
 //changer le password
+exports.changePwd = (req, res, next) => {
+  let uuid = req.params.uuid;
+  const newPassword = req.body.newPassword;
+  console.log("voici le nouveau Mdp : " + newPassword)
+  console.log('admin vérifions si validPassword est juste : ' + verifInput.validPassword(newPassword))
+  if (verifInput.validPassword(newPassword)) {
+    models.User.findOne({
+      where: { uuid }
+    })
+      .then(user => {
+        if (user) {
+          console.log('user trouvé', user)
+          bcrypt.hash(newPassword, 10)
+            .then(hash => {
+              console.log("c'est le hash : " + hash)
+              models.User
+                .update({ password: hash }, { where: { uuid: uuid } },
+                  )
+            })
+            .then(() => res.status(201).json({ confirmation: 'mot de passe modifié avec succès' }))
+            .catch(err => res.status(500).json(err))
+        } else res.status(404).json({ error: "Utilisateur inconnue" })
+
+      })
+      .catch(err => res.status(500).json(err))
+  } else {
+    res.status(406).json({ error: 'mot de passe non valide' })
+  }
+}
