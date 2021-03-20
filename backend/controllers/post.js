@@ -1,22 +1,6 @@
-let models = require('../models');
 
-exports.listMsg = (req, res, next) => {
-    console.log("Je suis bien dans la fonction listMsg")
-    models.post.findAll({
-        include: [{
-            model: models.User, as: 'user',
-        }],
-        order: [['createdAt', 'DESC']]
-    })
-        .then(posts => {
-            if (posts) {
-                res.status(200).json(posts)
-            } else {
-                res.status(404).json({ error: 'Pas de post à afficher' })
-            }
-        })
-        .catch(err => res.status(500).json(err))
-}
+let models = require('../models');
+const fs = require('fs');
 
 exports.createMsg = (req, res, next) => {
     let uuid = req.params.uuid;
@@ -28,13 +12,19 @@ exports.createMsg = (req, res, next) => {
             if (user) {
                 let message = req.body.message;
                 let titre = req.body.titre;
-                if (message == 'null' && titre == 'null') {
+                if(req.file) {
+                    attachmentURL = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+                } else {
+                    attachmentURL == null
+                };
+                if (message == 'null' && titre == 'null' && attachmentURL == null) {
                     res.status(400).json({ error: "Rien à publier" })
                 }
                 else {
                     console.log("tentative de post")
                     models.post.create({
                         message: message,
+                        attachement: attachementURL,
                         titre: titre,
                         userId: user.id
                     })
@@ -51,6 +41,23 @@ exports.createMsg = (req, res, next) => {
             }
         })
         .catch(error => res.status(501).json(error));
+}
+exports.listMsg = (req, res, next) => {
+    console.log("Je suis bien dans la fonction listMsg")
+    models.post.findAll({
+        include: [{
+            model: models.User, as: 'user',
+        }],
+        order: [['createdAt', 'DESC']]
+    })
+        .then(posts => {
+            if (posts) {
+                res.status(200).json(posts)
+            } else {
+                res.status(404).json({ error: 'Pas de post à afficher' })
+            }
+        })
+        .catch(err => res.status(500).json(err))
 }
 exports.listMesMsg = (req, res, next) => {
     let uuid = req.params.uuid;
@@ -87,8 +94,21 @@ exports.deleteMsg = (req, res, next) => {
 
     })
         .then(post => {
-            if (post && (post.user.isAdmin == true || post.user.uuid == userOrder)) {
-                console.log("je suis bien dans le else et j'ai toujours : " + req.body.uuidPost)
+            if (post && (post.user.isAdmin == true || post.user.uuid == userOrder)) { 
+
+                if (post.attachement) {
+                    const filename = post.attachement.split('/images/')[1];
+                    console.log("Ici je supprime le file name  "+ filename)
+                    fs.unlink(`images/${filename}`, () => {
+                        models.post.destroy({
+                            where: { uuidPost }
+                        })
+                        .then(() => res.end())
+                        .catch(err => res.status(500).json(err))
+                    })
+                }
+                else {
+                    console.log("je suis bien dans le else et j'ai toujours : " + req.body.uuidPost)
                 models.post
                     .destroy({
                         where: { uuidPost: uuidPost }
@@ -96,6 +116,10 @@ exports.deleteMsg = (req, res, next) => {
 
                     .then(() => res.end())
                     .catch(err => res.status(500).json(err))
+                }    
+
+
+                
             }
             else { res.status(403).json('Utilisateur non autorisé à supprimer ce post') }
         })
@@ -125,7 +149,8 @@ exports.updateMsg = (req, res, next) => {
                     .update(
                         {
                             titre: req.body.data.newTitre,
-                            message: req.body.data.newMessage
+                            message: req.body.data.newMessage,
+                            attachement: req.body.data.newImg
                         },
                         { where: { uuidPost: uuidPost } }
                     )
