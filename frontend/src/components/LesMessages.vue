@@ -1,22 +1,33 @@
 <template>
   <div>
-    <div v-if="Update"
-      class="bg-light rounded shadow-box m-2 p-3 d-flex flex-column justify-content-between" 
+    <ModaleModifyHome
+      v-bind:key="modifPost.id"
+      :modifPost="modifPost"
+      v-show="showModaleModify"
+      @ModaleModify="ModaleModify"
+    />
+    <div
+      class="bg-light rounded shadow-box m-2 p-3 d-flex flex-column justify-content-between"
     >
-      <div class="jumbotron rounded shadow-box p-2" >
+      <div class="jumbotron rounded shadow-box p-2">
         <p>{{ post.titre }}</p>
       </div>
-      <div >
+      <div>
         <p>{{ post.message }}</p>
       </div>
       <div class="d-flex justify-content-end">
         <button class="btn btn-primary m-2">
           <i class="far fa-comments"></i>
         </button>
-        <button class="btn btn-primary m-2">
-          <i class="fas fa-comment-dots"></i>
+        <button 
+          class="btn btn-primary m-2"
+        >
+          <i class="fas fa-comment-dots" v-bind:post="post"
+          @click="showModaleModify = !showModaleModify"></i>
         </button>
-        <button @click="deletePost()" class="btn btn-primary m-2"><i class="fas fa-ban"></i></button>
+        <button @click="updateDeletePost" class="btn btn-primary m-2">
+          <i class="fas fa-ban"></i>
+        </button>
         <button class="btn btn-primary m-2">Commentaires</button>
       </div>
     </div>
@@ -25,40 +36,40 @@
 
 <script>
 import { mapState } from "vuex";
-import axios from "axios";
-//import router from "../router/index"
+import ModaleModifyHome from "../components/ModaleModifyHome";
 
 export default {
-  name: "LesMessages",
-  data() { return {Update: true}},
+  name: "LesMessages",  
+  components: {
+    ModaleModifyHome,
+  },
   props: {
     post: {
       type: Object,
-      default() {},
       message: String,
       titre: String,
     },
+  },
+  data() {
+    return {
+       showModaleModify: false,
+       modifPost: this.post,
+    };
   },
   computed: {
     ...mapState(["User"]),
   },
   methods: {
-    deletePost() {
-      console.log(this.post.uuidPost)
-      let uuid = localStorage.getItem("uuid");
-      console.log("le post uuid : " + this.post.uuidPost + " l'user uuid" + uuid)
-      axios.delete("http://localhost:3000/api/post/delete/" + uuid, {
-        data: {
-          uuidPost: this.post.uuidPost,
-          userIdOrder: localStorage.getItem('uuid'),
-        },
-      })
-      .then(() => {
-        this.Update = false
-        console.log(this.Update)
-       
-      })
-      .catch(error => console.log(error));
+    updateDeletePost() {
+      const deleteUuidPost = this.post.uuidPost;
+      console.log("test dans updateDeletePost : " + deleteUuidPost);
+      this.$emit("deletePost", deleteUuidPost);
+    },
+    ModaleModify(showModaleModify) {
+      let reload = true;
+      console.log("je suis dans modaleModify");
+      this.showModaleModify = showModaleModify;
+      this.$emit("reload", reload);
     },
   },
 };

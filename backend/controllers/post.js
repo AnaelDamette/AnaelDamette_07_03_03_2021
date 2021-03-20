@@ -74,46 +74,65 @@ exports.listMesMsg = (req, res, next) => {
 
 exports.deleteMsg = (req, res, next) => {
     let userOrder = req.body.userIdOrder;
-    let uuid = req.params.uuid;
-    models.User.findOne({
-        where: { uuid }
-    })
-    .then(user => {
-            if (user && (user.isAdmin == true || user.uuid == userOrder)) {
-                console.log('Suppression du post id :', req.body.uuidPost);
-                models.post
-                    .findOne({
-                        where: { uuidPost: req.body.uuidPost }
-                    })
-                    .then((postFind) => {
-                        console.log("icitte je log le postFind : " + postFind)
-                        if (postFind.attachement) {
-                            const filename = postFind.attachement.split('/images/')[1];
-                            console.log("teseeeest", filename);
-                            fs.unlink(`images/${filename}`, () => {
-                                models.post
-                                    .destroy({
-                                        where: { uuidPost: req.body.uuidPost }
-                                    })
-                                    .then(() => res.end())
-                                    .catch(err => res.status(500).json(err))
-                            })
-                        }
-                        else {
-                            console.log("je suis bien dans le else et j'ai toujours : " + req.body.uuidPost)
-                            models.post
-                                .destroy({
-                                    where: { uuidPost: req.body.uuidPost }
-                                })
+    let uuidPost = req.body.uuidPost;
 
-                                .then(() => res.end())
-                                .catch(err => res.status(500).json(err))
-                        }
-                    })
-                    .catch(err => res.status(500).json(err))
-            } else { res.status(403).json('Utilisateur non autorisé à supprimer ce post') }
+    models.post.findOne({
+        include: [{
+            model: models.User, as: 'user',
+        }],
+        where: { uuidPost: uuidPost },
+
     })
-    .catch(error => res.status(500).json(error));
+        .then(post => {
+            if (post && (post.user.isAdmin == true || post.user.uuid == userOrder)) {
+                console.log("je suis bien dans le else et j'ai toujours : " + req.body.uuidPost)
+                models.post
+                    .destroy({
+                        where: { uuidPost: uuidPost }
+                    })
+
+                    .then(() => res.end())
+                    .catch(err => res.status(500).json(err))
+            }
+            else { res.status(403).json('Utilisateur non autorisé à supprimer ce post') }
+        })
+        .catch(error => res.status(500).json(error));
 }
 
-exports.updateMsg = (req, res, next) => { }
+
+exports.updateMsg = (req, res, next) => {
+
+    //récupération de l'id du demandeur pour vérification
+    let userOrder = req.body.data.userIdOrder;
+    let uuidPost = req.body.data.uuidPost;
+    console.log("je test à l'entrée de updateMsg  uuidPost  "+ uuidPost + " userOrder  " + userOrder)
+
+    models.post.findOne({
+        include: [{
+            model: models.User, as: 'user',
+        }],
+        where: { uuidPost: uuidPost }
+    })
+    .then(post => {
+
+        if(post && (post.user.isAdmin == true || post.user.uuid == userOrder)) {
+
+            console.log('je suis bien dans le fonction updateMsg et je log post  ' + req.body.data.newMessage + ' ainsi que req.body.data.newTitre  ' + req.body.data.newTitre )
+            models.post
+                    .update(
+                        {
+                            titre: req.body.data.newTitre,
+                            message: req.body.data.newMessage
+                        },
+                        { where: { uuidPost: uuidPost } }
+                    )
+                    .then(() => res.end())
+                    .catch(err => res.status(500).json(err))
+        }else {
+            res.status(401).json({ error: 'Utilisateur non autorisé à modifier ce post' })
+        }
+    }
+    )
+    .catch(error => res.status(500).json(error));
+    
+ }

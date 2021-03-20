@@ -1,6 +1,7 @@
 
 import Vue from 'vue'
 import Vuex from 'vuex'
+import axios from 'axios'
 
 Vue.use(Vuex)
 
@@ -27,6 +28,23 @@ const store = new Vuex.Store({
     }
   },
   actions: {
+    deletePost() {
+      console.log(this.post.uuidPost)
+      let uuid = localStorage.getItem("uuid");
+      console.log("le post uuid : " + this.post.uuidPost + " l'user uuid" + uuid)
+      axios.delete("http://localhost:3000/api/post/delete/" + uuid, {
+        data: {
+          uuidPost: this.post.uuidPost,
+          userIdOrder: localStorage.getItem('uuid'),
+        },
+      })
+      .then(() => {
+        this.post.updatekey != this.post.updateKey 
+        console.log(this.post.updateKey)
+       
+      })
+      .catch(error => console.log(error));
+    },
   },
   modules: {
   }

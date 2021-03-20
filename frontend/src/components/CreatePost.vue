@@ -66,7 +66,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["user", "editOption"])
+    ...mapState(["User"])
   },
   methods: {
     createPost() {

@@ -88,7 +88,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style >
 .bloc-modale {
   z-index: 10;
   position: fixed;
@@ -113,7 +113,7 @@ export default {
 .modale {
   background: #f1f1f1;
   color: #333;
-  padding: 50px;
+  padding: 40px;
   position: fixed;
   top: 30%;
 }
