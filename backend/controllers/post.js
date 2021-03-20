@@ -3,6 +3,9 @@ let models = require('../models');
 exports.listMsg = (req, res, next) => {
     console.log("Je suis bien dans la fonction listMsg")
     models.post.findAll({
+        include: [{
+            model: models.User, as: 'user',
+        }],
         order: [['createdAt', 'DESC']]
     })
         .then(posts => {

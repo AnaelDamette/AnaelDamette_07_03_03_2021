@@ -20,12 +20,15 @@
           <i class="far fa-comments"></i>
         </button>
         <button 
+        v-if="(this.User.isAdmin == 1 || this.User.userID == this.post.user.uuid)"
           class="btn btn-primary m-2"
         >
-          <i class="fas fa-comment-dots" v-bind:post="post"
+          <i class="fas fa-comment-dots"  v-bind:post="post"
           @click="showModaleModify = !showModaleModify"></i>
         </button>
-        <button @click="updateDeletePost" class="btn btn-primary m-2">
+        <button 
+        v-if="(this.User.isAdmin == 1 || this.User.userID == this.post.user.uuid)"
+        @click="updateDeletePost" class="btn btn-primary m-2">
           <i class="fas fa-ban"></i>
         </button>
         <button class="btn btn-primary m-2">Commentaires</button>
@@ -67,6 +70,7 @@ export default {
     },
     ModaleModify(showModaleModify) {
       let reload = true;
+      console.log(this.User)
       console.log("je suis dans modaleModify");
       this.showModaleModify = showModaleModify;
       this.$emit("reload", reload);
