@@ -25,7 +25,9 @@
         />
       </div>
       <div class="d-flex flex-column form-group p-3">
-        <div class="d-flex justify-content-start bg-dark rounded shadow-box pt-2 pl-3">
+        <div
+          class="d-flex justify-content-start bg-dark rounded shadow-box pt-2 pl-3"
+        >
           <label for="input_text" class="">
             <p class="text-secondary">Ensuite votre joli message !</p></label
           >
@@ -39,6 +41,12 @@
           placeholder="Ecris ici ton message"
         ></textarea>
       </div>
+      <input
+        name="inputFile"
+        type="file"
+        id="inputFile"
+        @change="onFileChange"
+      />
       <div class="d-flex form-group justify-content-end">
         <input
           type="submit"
@@ -51,9 +59,9 @@
   </div>
 </template>
 <script>
-import { mapState } from "vuex"
-import axios from "axios"
-import router from "../router/index"
+import { mapState } from "vuex";
+import axios from "axios";
+import router from "../router/index";
 export default {
   name: "CreatePost",
   data() {
@@ -61,29 +69,40 @@ export default {
       contentPost: {
         message: null,
         titre: null,
+        image: null
       },
-      msgError:""
+      msgError: "",
     };
   },
   computed: {
-    ...mapState(["User"])
+    ...mapState(["User"]),
   },
   methods: {
     createPost() {
       console.log(this.contentPost);
+      const fd = new FormData();
+      fd.append("image", this.contentPost.image, this.contentPost.image.name);
+      fd.append("message", this.contentPost.message)
+      fd.append("titre", this.contentPost.titre)
       let uuid = localStorage.getItem("uuid");
       if (this.contentPost.message != null && this.contentPost.titre != null) {
         axios
-        .post("http://localhost:3000/api/post/create/" + uuid, this.contentPost)
-        .then(response => {
-          if(response) {
-            router.push('/');
-          }
-        })
-        .catch(error => (this.msgError = error))
+          .post(
+            "http://localhost:3000/api/post/create/" + uuid, fd
+          )
+          .then((response) => {
+            if (response) {
+              router.push("/");
+            }
+          })
+          .catch((error) => (this.msgError = error));
       }
-
     },
-  }
+    onFileChange(event) {
+      console.log(event);
+      this.contentPost.image = event.target.files[0]
+      console.log(this.contentPost.image)
+    },
+  },
 };
 </script>

@@ -152,14 +152,21 @@ exports.deleteProfile = (req, res, next) => {
       if (user != null && (user.uuid == uuid || userIsAdmin == 1)) {
         //supprimé les attachement des posts puis les posts !
         console.log("test du Usericitte ")
+        console.log(user.id)
+        
         models.post.findAll({
           where: { userId: user.id }
         })
           .then((response) => {
             console.log("test response is Array  " + Array.isArray(response))
-            if (response.post) {
+            console.dir(response)
+           
+            
+            if (response == []) {
               response.forEach(post => {
                 const uuidPost = post.uuidPost
+                console.log(post.attachement)
+                
                 // pour chaque post de l'utilisateur on vérifie s'il y a un post.attachement et auquel cas on supprime le post sinon on supprime le post
                 if (post.attachement) {
 
@@ -173,7 +180,6 @@ exports.deleteProfile = (req, res, next) => {
                     })
                       .catch(err => res.status(500).json(err))
                     console.log('et ici ?')
-                    response.splice(post);
                   })
 
                 } else {
@@ -183,6 +189,7 @@ exports.deleteProfile = (req, res, next) => {
                     .catch(err => res.status(500).json(err))
                 }
               }).then(() => {
+                console.log("stop ici")
                 models.User
                   .destroy({
                     where: { uuid }

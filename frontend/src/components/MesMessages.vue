@@ -12,8 +12,11 @@
       <div class="jumbotron rounded shadow-box p-2">
         <p>{{ post.titre }}</p>
       </div>
-      <div>
+      <div class="d-flex">
+      <div class='col-6'>
         <p>{{ post.message }}</p>
+      </div>
+        <figure class="rounded p-1 bg-dark"><img :src="post.attachement" class="w-100 rounded" /></figure>
       </div>
       <div class="d-flex justify-content-end">
         <button

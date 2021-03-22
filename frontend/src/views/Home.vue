@@ -59,13 +59,14 @@ export default {
     },
     deletePost(deleteUuidPost) {
       console.log("test : " + deleteUuidPost);
+      console.log(this.User.uuid + " " + this.User.isAdmin)
       let uuid = localStorage.getItem("uuid");
       console.log("le post uuid : " + deleteUuidPost + " l'user uuid" + uuid);
       axios
         .delete("http://localhost:3000/api/post/delete/" + uuid, {
           data: {
             uuidPost: deleteUuidPost,
-            userIdOrder: uuid,
+            userIsAdmin: this.User.isAdmin
           },
         })
         .then(() => {

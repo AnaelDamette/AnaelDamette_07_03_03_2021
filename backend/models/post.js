@@ -41,6 +41,9 @@ module.exports = (sequelize, DataTypes) => {
       type:DataTypes.TEXT,
       allowNull: false,
     },
+    attachement: {
+      type: DataTypes.STRING,
+    }
     
   }, {
     sequelize,

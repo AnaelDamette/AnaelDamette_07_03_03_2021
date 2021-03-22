@@ -12,23 +12,35 @@
       <div class="jumbotron rounded shadow-box p-2">
         <p>{{ post.titre }}</p>
       </div>
-      <div>
+      <div class="d-flex">
+      <div class='col-6'>
         <p>{{ post.message }}</p>
+      </div>
+        <figure class="rounded p-1 bg-dark"><img :src="post.attachement" class="w-100 rounded" /></figure>
       </div>
       <div class="d-flex justify-content-end">
         <button class="btn btn-primary m-2">
           <i class="far fa-comments"></i>
         </button>
-        <button 
-        v-if="(this.User.isAdmin == 1 || this.User.userID == this.post.user.uuid)"
+        <button
+          v-if="
+            this.User.isAdmin == 1 || this.User.userID == this.post.user.uuid
+          "
           class="btn btn-primary m-2"
         >
-          <i class="fas fa-comment-dots"  v-bind:post="post"
-          @click="showModaleModify = !showModaleModify"></i>
+          <i
+            class="fas fa-comment-dots"
+            v-bind:post="post"
+            @click="showModaleModify = !showModaleModify"
+          ></i>
         </button>
-        <button 
-        v-if="(this.User.isAdmin == 1 || this.User.userID == this.post.user.uuid)"
-        @click="updateDeletePost" class="btn btn-primary m-2">
+        <button
+          v-if="
+            this.User.isAdmin == 1 || this.User.userID == this.post.user.uuid
+          "
+          @click="updateDeletePost"
+          class="btn btn-primary m-2"
+        >
           <i class="fas fa-ban"></i>
         </button>
         <button class="btn btn-primary m-2">Commentaires</button>
@@ -42,7 +54,7 @@ import { mapState } from "vuex";
 import ModaleModifyHome from "../components/ModaleModifyHome";
 
 export default {
-  name: "LesMessages",  
+  name: "LesMessages",
   components: {
     ModaleModifyHome,
   },
@@ -55,8 +67,8 @@ export default {
   },
   data() {
     return {
-       showModaleModify: false,
-       modifPost: this.post,
+      showModaleModify: false,
+      modifPost: this.post,
     };
   },
   computed: {
@@ -70,7 +82,7 @@ export default {
     },
     ModaleModify(showModaleModify) {
       let reload = true;
-      console.log(this.User)
+      console.log(this.User);
       console.log("je suis dans modaleModify");
       this.showModaleModify = showModaleModify;
       this.$emit("reload", reload);

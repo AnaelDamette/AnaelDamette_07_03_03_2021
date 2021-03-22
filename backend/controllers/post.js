@@ -12,6 +12,7 @@ exports.createMsg = (req, res, next) => {
             if (user) {
                 let message = req.body.message;
                 let titre = req.body.titre;
+                console.log(req.body)
                 if(req.file) {
                     attachmentURL = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
                 } else {
@@ -24,7 +25,7 @@ exports.createMsg = (req, res, next) => {
                     console.log("tentative de post")
                     models.post.create({
                         message: message,
-                        attachement: attachementURL,
+                        attachement: attachmentURL,
                         titre: titre,
                         userId: user.id
                     })
@@ -83,8 +84,9 @@ exports.listMesMsg = (req, res, next) => {
 
 
 exports.deleteMsg = (req, res, next) => {
-    let userOrder = req.body.userIdOrder;
+    let userIsAdmin = req.body.userIsAdmin;
     let uuidPost = req.body.uuidPost;
+    let uuid = req.params.uuid
 
     models.post.findOne({
         include: [{
@@ -94,7 +96,7 @@ exports.deleteMsg = (req, res, next) => {
 
     })
         .then(post => {
-            if (post && (post.user.isAdmin == true || post.user.uuid == userOrder)) { 
+            if (post && (userIsAdmin == 1 || post.user.uuid == uuid)) { 
 
                 if (post.attachement) {
                     const filename = post.attachement.split('/images/')[1];
