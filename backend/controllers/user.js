@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const models = require('../models');
 let verifInput = require('../utils/verifInputs');
 const e = require('express');
+const fs = require('fs');
 
 var crypto = require('crypto'),
   algorithm = 'aes-256-ctr',
@@ -137,28 +138,66 @@ exports.userProfil = (req, res, next) => {
 
 //supprimer le profil
 exports.deleteProfile = (req, res, next) => {
-
+  let userIsAdmin = req.body.userIsAdmin
   let uuid = req.params.uuid;
   console.log(uuid)
   models.User.findOne({
+    include: [{
+      model: models.post, as: 'post',
+    }],
     where: { uuid }
   })
     .then(user => {
-      console.log("test du Usericitte " + "  " + user)
-      if (user != null) {
-        models.post
-        .destroy({
-          where: {userId: user.id}
+
+      if (user != null && (user.uuid == uuid || userIsAdmin == 1)) {
+        //supprimé les attachement des posts puis les posts !
+        console.log("test du Usericitte ")
+        models.post.findAll({
+          where: { userId: user.id }
         })
-        .then(() =>{models.User
-          .destroy({
-            where: { uuid }
+          .then((response) => {
+            console.log("test response is Array  " + Array.isArray(response))
+            if (response.post) {
+              response.forEach(post => {
+                const uuidPost = post.uuidPost
+                // pour chaque post de l'utilisateur on vérifie s'il y a un post.attachement et auquel cas on supprime le post sinon on supprime le post
+                if (post.attachement) {
+
+                  const filename = post.attachement.split('/images/')[1];
+                  console.log("j'ai supprimé le file name  " + post.uuidPost + " " + filename)
+                  fs.unlink(`images/${filename}`, () => {
+                    console.log("est-ce que j'arrive icci ?")
+
+                    models.post.destroy({
+                      where: { uuidPost }
+                    })
+                      .catch(err => res.status(500).json(err))
+                    console.log('et ici ?')
+                    response.splice(post);
+                  })
+
+                } else {
+                  models.post.destroy({
+                    where: { uuidPost }
+                  })
+                    .catch(err => res.status(500).json(err))
+                }
+              }).then(() => {
+                models.User
+                  .destroy({
+                    where: { uuid }
+                  })
+                  .then(() => res.end())
+                  .catch(err => console.log(err))
+              })
+                .catch(err => res.status(500).json(err))
+            } else {
+              models.User.destroy({ where: { uuid } })
+                .then(() => res.end())
+                .catch(err => console.log(err))
+            }
           })
-          .then(() => res.end())
-          .catch(err => console.log(err))
-        })
-        .catch(err =>res.status(500).json(err))
-        
+          .catch(err => res.status(500).json(err))
       } else {
         res.status(401).json({ error: "Cet user n'existe pas" })
       }
@@ -183,7 +222,7 @@ exports.changePwd = (req, res, next) => {
               console.log("c'est le hash : " + hash)
               models.User
                 .update({ password: hash }, { where: { uuid: uuid } },
-                  )
+              )
             })
             .then(() => res.status(201).json({ confirmation: 'mot de passe modifié avec succès' }))
             .catch(err => res.status(500).json(err))
@@ -194,4 +233,21 @@ exports.changePwd = (req, res, next) => {
   } else {
     res.status(406).json({ error: 'mot de passe non valide' })
   }
+}
+
+exports.getAll = (req, res, next) => {
+  let uuid = req.params.uuid;
+
+  models.User.findOne({
+    where: { uuid }
+  })
+    .then(user => {
+      if (user.isAdmin == 1) {
+        models.User.findAll()
+          .then(users => res.status(200).json(users))
+          .catch(err => res.status(500).json(err))
+      } else {
+        res.status(403).json({ error: "Vous n'êtes pas Admin" })
+      }
+    })
 }
