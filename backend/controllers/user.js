@@ -10,6 +10,8 @@ var crypto = require('crypto'),
   algorithm = 'aes-256-ctr',
   password = 'aes-256-ctr';
 
+
+
 function decrypt(text) {
   var decipher = crypto.createDecipher(algorithm, password)
   var dec = decipher.update(text, 'hex', 'utf8')
@@ -17,12 +19,60 @@ function decrypt(text) {
   return dec;
 }
 
+
+
 function encrypt(text) {
   var cipher = crypto.createCipher(algorithm, password)
   var crypted = cipher.update(text, 'utf8', 'hex')
   crypted += cipher.final('hex');
   return crypted;
 }
+
+
+
+function deleteAllPost(user) {
+  console.log("j'suis bien ici ?")
+  console.log(user)
+  //selection les posts et lance la boucle forEach
+    models.post.findAll({
+        where: { userId: user.id }
+    })
+        .then((response) => {
+            console.dir(response + "   pourquoi ici ?")
+            if (response.length > 0) {
+                response.forEach(post => {
+                    deleteAllArrayPost(post)
+                })
+                return
+            } else { return }
+  
+        })
+  }
+  
+  function deleteAllArrayPost(post) {
+    //supprime le post dans la boucle
+    let uuidPost = post.uuidPost
+    if (post) {
+        if (post.attachement) {
+            const filename = post.attachement.split('/images/')[1];
+            console.log("j'ai supprimé le file name  ")
+            fs.unlink(`images/${filename}`, () => {
+                console.log("est-ce que j'arrive icci ?")
+  
+                models.post.destroy({
+                    where: { uuidPost }
+                })
+                console.log('et ici ?')
+            })
+            return
+        } else {
+            models.post.destroy({
+                where: { uuidPost }
+            })
+            return
+        }
+    } else { return }
+  }
 
 exports.signup = (req, res, next) => {
   // Valider les paramètres de la requète
@@ -43,7 +93,6 @@ exports.signup = (req, res, next) => {
   console.log("verif username " + usernameOk)
   if (emailOk == true && mdpOK == true && usernameOk == true) {
     //Vérification si user n'existe pas déjà
-    //TO DO => Vérifier l'username et l'email
     models.User.findOne({
       attributes: ['username'],
       where: { username: username }
@@ -148,68 +197,27 @@ exports.deleteProfile = (req, res, next) => {
     where: { uuid }
   })
     .then(user => {
-
+      console.log("test " + user)
       if (user != null && (user.uuid == uuid || userIsAdmin == 1)) {
         //supprimé les attachement des posts puis les posts !
         console.log("test du Usericitte ")
         console.log(user.id)
-        
-        models.post.findAll({
-          where: { userId: user.id }
-        })
-          .then((response) => {
-            console.log("test response is Array  " + Array.isArray(response))
-            console.dir(response)
-           
-            
-            if (response == []) {
-              response.forEach(post => {
-                const uuidPost = post.uuidPost
-                console.log(post.attachement)
-                
-                // pour chaque post de l'utilisateur on vérifie s'il y a un post.attachement et auquel cas on supprime le post sinon on supprime le post
-                if (post.attachement) {
+        deleteAllPost(user)
+        console.log("supression user")
+        models.User.destroy({ where: { uuid } })
+          .then(() => res.end())
+          .catch(err => console.log(err))
 
-                  const filename = post.attachement.split('/images/')[1];
-                  console.log("j'ai supprimé le file name  " + post.uuidPost + " " + filename)
-                  fs.unlink(`images/${filename}`, () => {
-                    console.log("est-ce que j'arrive icci ?")
 
-                    models.post.destroy({
-                      where: { uuidPost }
-                    })
-                      .catch(err => res.status(500).json(err))
-                    console.log('et ici ?')
-                  })
-
-                } else {
-                  models.post.destroy({
-                    where: { uuidPost }
-                  })
-                    .catch(err => res.status(500).json(err))
-                }
-              }).then(() => {
-                console.log("stop ici")
-                models.User
-                  .destroy({
-                    where: { uuid }
-                  })
-                  .then(() => res.end())
-                  .catch(err => console.log(err))
-              })
-                .catch(err => res.status(500).json(err))
-            } else {
-              models.User.destroy({ where: { uuid } })
-                .then(() => res.end())
-                .catch(err => console.log(err))
-            }
-          })
           .catch(err => res.status(500).json(err))
       } else {
         res.status(401).json({ error: "Cet user n'existe pas" })
       }
     }).catch(err => res.status(404).json(err))
 }
+
+
+
 
 //changer le password
 exports.changePwd = (req, res, next) => {
