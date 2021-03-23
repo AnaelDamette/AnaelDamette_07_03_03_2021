@@ -2,6 +2,20 @@
 let models = require('../models');
 const fs = require('fs');
 
+
+function deleteImage(post) {
+    console.log("Nous somme dans bien dans update Image")
+    // supprimé l'image du registre 
+
+    const filename = post.attachement.split('/images/')[1];
+    console.log("Ici je supprime le file name  " + filename)
+    fs.unlink(`images/${filename}`, () => {
+        console.log("image bien supprimé")
+        return
+    })
+    return
+}
+
 exports.createMsg = (req, res, next) => {
     let uuid = req.params.uuid;
     console.log("Voici l'uuid : " + uuid)
@@ -13,7 +27,7 @@ exports.createMsg = (req, res, next) => {
                 let message = req.body.message;
                 let titre = req.body.titre;
                 console.log(req.body)
-                if(req.file) {
+                if (req.file) {
                     attachmentURL = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
                 } else {
                     attachmentURL == null
@@ -96,32 +110,32 @@ exports.deleteMsg = (req, res, next) => {
 
     })
         .then(post => {
-            if (post && (userIsAdmin == 1 || post.user.uuid == uuid)) { 
+            if (post && (userIsAdmin == 1 || post.user.uuid == uuid)) {
 
                 if (post.attachement) {
                     const filename = post.attachement.split('/images/')[1];
-                    console.log("Ici je supprime le file name  "+ filename)
+                    console.log("Ici je supprime le file name  " + filename)
                     fs.unlink(`images/${filename}`, () => {
                         models.post.destroy({
                             where: { uuidPost }
                         })
-                        .then(() => res.end())
-                        .catch(err => res.status(500).json(err))
+                            .then(() => res.end())
+                            .catch(err => res.status(500).json(err))
                     })
                 }
                 else {
                     console.log("je suis bien dans le else et j'ai toujours : " + req.body.uuidPost)
-                models.post
-                    .destroy({
-                        where: { uuidPost: uuidPost }
-                    })
+                    models.post
+                        .destroy({
+                            where: { uuidPost: uuidPost }
+                        })
 
-                    .then(() => res.end())
-                    .catch(err => res.status(500).json(err))
-                }    
+                        .then(() => res.end())
+                        .catch(err => res.status(500).json(err))
+                }
 
 
-                
+
             }
             else { res.status(403).json('Utilisateur non autorisé à supprimer ce post') }
         })
@@ -132,9 +146,9 @@ exports.deleteMsg = (req, res, next) => {
 exports.updateMsg = (req, res, next) => {
 
     //récupération de l'id du demandeur pour vérification
-    let userOrder = req.body.data.userIdOrder;
-    let uuidPost = req.body.data.uuidPost;
-    console.log("je test à l'entrée de updateMsg  uuidPost  "+ uuidPost + " userOrder  " + userOrder)
+    let userOrder = req.body.userOrder;
+    let uuidPost = req.body.uuidPost;
+    console.log("je test à l'entrée de updateMsg  uuidPost  " + uuidPost + " userOrder  " + userOrder)
 
     models.post.findOne({
         include: [{
@@ -142,27 +156,53 @@ exports.updateMsg = (req, res, next) => {
         }],
         where: { uuidPost: uuidPost }
     })
-    .then(post => {
 
-        if(post && (post.user.isAdmin == true || post.user.uuid == userOrder)) {
+        .then(post => {
+            console.log(post.user.uuid + "  je test l'userr uuid" + (post && (post.user.uuid == userOrder)))
+            console.log(req.body.newTitre)
+            console.log("uuidPost =  " + uuidPost)
 
-            console.log('je suis bien dans le fonction updateMsg et je log post  ' + req.body.data.newMessage + ' ainsi que req.body.data.newTitre  ' + req.body.data.newTitre )
-            models.post
-                    .update(
+            if (post && (post.user.uuid == userOrder)) {
+                if (post.attachement != req.body.image) {
+                    const filename = post.attachement.split('/images/')[1];
+                    console.log("Ici je supprime le file name  " + filename)
+                    fs.unlink(`images/${filename}`, () => {
+                        attachementURL = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+                        console.log("image bien supprimé" + attachementURL)
+                        models.post.update(
+                            {
+                                titre: req.body.newTitre,
+                                message: req.body.newMessage,
+                                attachement: attachementURL
+                            },
+                            { where: { uuidPost: uuidPost } }
+                        )
+                            .then(() => res.end())
+                            .catch(err => res.status(500).json(err))
+
+                    })
+
+
+                } else {
+                    console.log('suis-je dedans ? ')
+                    attachementURL = post.attachement
+                    models.post.update(
                         {
-                            titre: req.body.data.newTitre,
-                            message: req.body.data.newMessage,
-                            attachement: req.body.data.newImg
+                            titre: req.body.newTitre,
+                            message: req.body.newMessage,
+                            attachement: attachementURL
                         },
                         { where: { uuidPost: uuidPost } }
                     )
-                    .then(() => res.end())
-                    .catch(err => res.status(500).json(err))
-        }else {
-            res.status(401).json({ error: 'Utilisateur non autorisé à modifier ce post' })
+                        .then(() => res.end())
+                        .catch(err => res.status(500).json(err))
+                }
+               
+            } else {
+                res.status(401).json({ error: 'Utilisateur non autorisé à modifier ce post' })
+            }
         }
-    }
-    )
-    .catch(error => res.status(500).json(error));
-    
- }
+        )
+        .catch(error => res.status(500).json(error));
+
+}

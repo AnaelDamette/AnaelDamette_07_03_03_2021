@@ -1,6 +1,6 @@
 <template>
   <div>
-    <ModaleModifyHome
+    <ModaleModify
       v-bind:key="modifPost.id"
       :modifPost="modifPost"
       v-show="showModaleModify"
@@ -51,12 +51,12 @@
 
 <script>
 import { mapState } from "vuex";
-import ModaleModifyHome from "../components/ModaleModifyHome";
+import ModaleModify from "../components/ModaleModify";
 
 export default {
   name: "LesMessages",
   components: {
-    ModaleModifyHome,
+    ModaleModify,
   },
   props: {
     post: {
