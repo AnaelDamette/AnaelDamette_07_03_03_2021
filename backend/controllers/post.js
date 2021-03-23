@@ -60,9 +60,10 @@ exports.createMsg = (req, res, next) => {
 exports.listMsg = (req, res, next) => {
     console.log("Je suis bien dans la fonction listMsg")
     models.post.findAll({
-        include: [{
-            model: models.User, as: 'user',
-        }],
+        include: [
+            { model: models.User, as: 'user' },
+            { model: models.comment, as: 'comment' }
+        ],
         order: [['createdAt', 'DESC']]
     })
         .then(posts => {
@@ -197,7 +198,7 @@ exports.updateMsg = (req, res, next) => {
                         .then(() => res.end())
                         .catch(err => res.status(500).json(err))
                 }
-               
+
             } else {
                 res.status(401).json({ error: 'Utilisateur non autorisé à modifier ce post' })
             }

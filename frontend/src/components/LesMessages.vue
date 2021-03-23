@@ -23,6 +23,7 @@
       </div>
         <figure class="rounded p-1 bg-dark"><img :src="post.attachement" class="w-100 rounded" /></figure>
       </div>
+      <Comments v-show="showComment" :post="post"/>
       <div class="d-flex justify-content-end">
         <button class="btn btn-primary m-2"
         @click="showModaleComment = !showModaleComment">
@@ -50,7 +51,7 @@
         >
           <i class="fas fa-ban"></i>
         </button>
-        <button class="btn btn-primary m-2">Commentaires</button>
+        <button @click='showComment = !showComment' class="btn btn-primary m-2">Commentaires</button>
       </div>
     </div>
   </div>
@@ -60,12 +61,14 @@
 import { mapState } from "vuex";
 import ModaleModify from "../components/ModaleModify";
 import ModaleComment from "../components/ModaleComment";
+import Comments from "../components/Comments"
 
 export default {
   name: "LesMessages",
   components: {
     ModaleModify,
-    ModaleComment
+    ModaleComment,
+    Comments
   },
   props: {
     post: {
@@ -80,6 +83,7 @@ export default {
       modifPost: this.post,
       comment: this.post,
       showModaleComment: false,
+      showComment: false,
     };
   },
   computed: {
