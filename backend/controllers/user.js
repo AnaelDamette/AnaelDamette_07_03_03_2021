@@ -188,8 +188,8 @@ exports.userProfil = (req, res, next) => {
 //supprimer le profil
 exports.deleteProfile = (req, res, next) => {
   let userIsAdmin = req.body.userIsAdmin
-  let uuid = req.params.uuid;
-  console.log(uuid)
+  let uuid = req.body.deleteUserUuid;
+  console.log('je suis dans deleteprofile')
   models.User.findOne({
     include: [{
       model: models.post, as: 'post',

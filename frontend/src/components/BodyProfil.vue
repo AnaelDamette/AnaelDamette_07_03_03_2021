@@ -102,8 +102,13 @@ export default {
     },
     deleteAccount() {
       let uuid = localStorage.getItem("uuid");
+      let dataDelete = {
+        deleteUserUuid: uuid, 
+        userIsAdmin: this.User.isAdmin
+        }
+      console.log(dataDelete.deleteUserUuid + "  dataDelete Existe  " + dataDelete.userIsAdmin)
       axios
-        .delete("http://localhost:3000/api/auth/delete/" + uuid)
+        .delete("http://localhost:3000/api/auth/delete/" + uuid, { data: dataDelete})
         .then(() => {
           localStorage.clear();
           location.replace("/signup");

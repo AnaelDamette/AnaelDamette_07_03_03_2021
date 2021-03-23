@@ -69,7 +69,7 @@ export default {
             localStorage.setItem("token", response.data.token);
             localStorage.setItem("uuid", response.data.uuid);
             store.commit("saveToken");
-            console.log(response.data.uuid)
+            console.log("test uuid" + response.data.uuid)
             store.commit("saveUserInfos", [response.data.username, response.data.uuid, response.data.email, response.data.isAdmin])
             router.push('/')
           })

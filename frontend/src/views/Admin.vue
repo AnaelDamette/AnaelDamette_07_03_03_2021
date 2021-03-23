@@ -1,7 +1,7 @@
 <template>
   <div class="home container">
     <HelloWorld msg="Administration de Groupomania" />
-    <LesUtilisateurs v-for="users in allUsers" :users="users" v-bind:key="users.uuid" />
+    <LesUtilisateurs @reload="reload" v-for="users in allUsers" :users="users" v-bind:key="users.uuid" />
     
   </div>
 </template>
@@ -31,7 +31,12 @@ export default {
   computed: {
     ...mapState(["User"]),
   },
+  
   methods: {
+    reload(reload) {
+    this.getUser()
+    console.log(reload)
+  },
   getUser(){
 
     console.log("Fonction getUser")

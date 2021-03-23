@@ -30,9 +30,20 @@ export default {
   },
   methods: {
     deleteUser() {
+      let reload = true;
+      let uuid = localStorage.getItem('uuid')
+      let dataDelete = {
+        deleteUserUuid: this.users.uuid, 
+        userIsAdmin: this.User.isAdmin
+        }
+
+
+
       axios
-        .delete("http://localhost:3000/api/aut/delete/" + uuid)
-        .then(() => console.log("utilisateur supprimé"))
+        .delete("http://localhost:3000/api/auth/delete/" + uuid, { data: dataDelete})
+        .then(() => {
+          console.log("utilisateur supprimé")
+          this.$emit("reload", reload)})
         .catch((error) => console.log(error));
       console.log("Je suis bien en train de delete un User");
     },
