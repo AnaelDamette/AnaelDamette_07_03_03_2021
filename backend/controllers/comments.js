@@ -10,10 +10,17 @@ exports.createComments = (req, res, next) => {
     })
         .then(post => {
             if (post) {
-                let postId = post.postId
+                console.log(post.id)
+                let postId = post.id
+                console.log("test postId  " + postId)
                 models.User.findOne({
                     where: { uuid }
                 }).then(user => {
+                    console.log("test models.comment")
+                    console.log(req.body.message)
+                    console.log(user.id)
+                    console.log(postId)
+
                     models.comment.create({
                         message: req.body.message,
                         userId: user.id,
@@ -36,7 +43,7 @@ exports.deleteComments = (req, res, next) => {
     let uuidComment = req.body.uuidComment;
     let uuid = req.params.uuid;
 
-    models.comment.findOne({
+    models.Comment.findOne({
         include: [{
             model: models.User, as: 'user',
         }],

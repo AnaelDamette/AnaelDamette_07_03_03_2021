@@ -6,6 +6,11 @@
       v-show="showModaleModify"
       @ModaleModify="ModaleModify"
     />
+    <ModaleComment
+    v-bind:key="comment.id"
+    :post="post"
+    v-show="showModaleComment"
+    @ModaleComment="ModaleComment" />
     <div
       class="bg-light rounded shadow-box m-2 p-3 d-flex flex-column justify-content-between"
     >
@@ -19,19 +24,21 @@
         <figure class="rounded p-1 bg-dark"><img :src="post.attachement" class="w-100 rounded" /></figure>
       </div>
       <div class="d-flex justify-content-end">
-        <button class="btn btn-primary m-2">
+        <button class="btn btn-primary m-2"
+        @click="showModaleComment = !showModaleComment">
           <i class="far fa-comments"></i>
         </button>
         <button
           v-if="
             this.User.isAdmin == 1 || this.User.userID == this.post.user.uuid
           "
+          v-bind:post="post"
+            @click="showModaleModify = !showModaleModify"
           class="btn btn-primary m-2"
         >
           <i
             class="fas fa-comment-dots"
-            v-bind:post="post"
-            @click="showModaleModify = !showModaleModify"
+            
           ></i>
         </button>
         <button
@@ -52,11 +59,13 @@
 <script>
 import { mapState } from "vuex";
 import ModaleModify from "../components/ModaleModify";
+import ModaleComment from "../components/ModaleComment";
 
 export default {
   name: "LesMessages",
   components: {
     ModaleModify,
+    ModaleComment
   },
   props: {
     post: {
@@ -69,6 +78,8 @@ export default {
     return {
       showModaleModify: false,
       modifPost: this.post,
+      comment: this.post,
+      showModaleComment: false,
     };
   },
   computed: {
@@ -87,6 +98,12 @@ export default {
       this.showModaleModify = showModaleModify;
       this.$emit("reload", reload);
     },
+    ModaleComment(showModaleComment) {
+      let reload = true;
+      console.log('je suis dans modaleComment')
+      this.showModaleComment = showModaleComment
+      this.$emit("reload", reload)
+    }
   },
 };
 </script>

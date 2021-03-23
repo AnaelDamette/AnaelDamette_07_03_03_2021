@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate( { User, post }) {
       this.belongsTo(User, { foreignKey:'userId', as: 'user'})
-      this.belongsTo(post, {foreignKey: "postID", as: "post"})
+      this.belongsTo(post, {foreignKey: "postId", as: "post"})
       // define association here
       //models.User.hasMany(models.post)
       // models.Post.belongsTo(models.User, {
