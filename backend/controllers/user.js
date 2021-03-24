@@ -59,16 +59,32 @@ function deleteAllPost(user) {
             fs.unlink(`images/${filename}`, () => {
                 console.log("est-ce que j'arrive icci ?")
   
-                models.post.destroy({
-                    where: { uuidPost }
-                })
+                models.comment.destroy({
+                  where: { postId: post.id }
+              }).then(() => {
+                  models.post.destroy({
+                      include: [{ model: models.comment, as: "comment" }],
+                      where: { uuidPost }
+                  })
+                      .then(() => res.end())
+                      .catch(err => res.status(500).json(err))
+              })
+                  .catch(err => res.status(500).json(err))
                 console.log('et ici ?')
             })
             return
         } else {
+          models.comment.destroy({
+            where: { postId: post.id }
+        }).then(() => {
             models.post.destroy({
+                include: [{ model: models.comment, as: "comment" }],
                 where: { uuidPost }
             })
+                .then(() => res.end())
+                .catch(err => res.status(500).json(err))
+        })
+            .catch(err => res.status(500).json(err))
             return
         }
     } else { return }

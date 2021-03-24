@@ -62,7 +62,7 @@ exports.listMsg = (req, res, next) => {
     models.post.findAll({
         include: [
             { model: models.User, as: 'user' },
-            { model: models.comment, as: 'comment', include: [{ model: models.User, as: 'user' }] }
+            { model: models.comment, as: 'comment', include: [{ model: models.User, as: 'user' }], order: [['createdAt', 'DESC']] }
         ],
         order: [['createdAt', 'DESC']]
     })
@@ -82,7 +82,9 @@ exports.listMesMsg = (req, res, next) => {
         include: [{
             model: models.post, as: 'post',
         }],
+
         where: { uuid },
+        order: [['createdAt', 'DESC']],
 
     })
         .then(posts => {
@@ -117,21 +119,32 @@ exports.deleteMsg = (req, res, next) => {
                     const filename = post.attachement.split('/images/')[1];
                     console.log("Ici je supprime le file name  " + filename)
                     fs.unlink(`images/${filename}`, () => {
+                        models.comment.destroy({
+                            where: { postId: post.id }
+                        }).then(() => {
+                            models.post.destroy({
+                                include: [{ model: models.comment, as: "comment" }],
+                                where: { uuidPost }
+                            })
+                                .then(() => res.end())
+                                .catch(err => res.status(500).json(err))
+                        })
+                            .catch(err => res.status(500).json(err))
+
+                    })
+                }
+                else {
+                    console.log("je suis bien dans le else et j'ai toujours : " + req.body.uuidPost)
+                    models.comment.destroy({
+                        where: { postId: post.id }
+                    }).then(() => {
                         models.post.destroy({
+                            include: [{ model: models.comment, as: "comment" }],
                             where: { uuidPost }
                         })
                             .then(() => res.end())
                             .catch(err => res.status(500).json(err))
                     })
-                }
-                else {
-                    console.log("je suis bien dans le else et j'ai toujours : " + req.body.uuidPost)
-                    models.post
-                        .destroy({
-                            where: { uuidPost: uuidPost }
-                        })
-
-                        .then(() => res.end())
                         .catch(err => res.status(500).json(err))
                 }
 
