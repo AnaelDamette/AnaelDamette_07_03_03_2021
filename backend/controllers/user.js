@@ -57,7 +57,6 @@ function deleteAllPost(user) {
             const filename = post.attachement.split('/images/')[1];
             console.log("j'ai supprimé le file name  ")
             fs.unlink(`images/${filename}`, () => {
-                console.log("est-ce que j'arrive icci ?")
   
                 models.comment.destroy({
                   where: { postId: post.id }
@@ -66,11 +65,9 @@ function deleteAllPost(user) {
                       include: [{ model: models.comment, as: "comment" }],
                       where: { uuidPost }
                   })
-                      .then(() => res.end())
                       .catch(err => res.status(500).json(err))
               })
                   .catch(err => res.status(500).json(err))
-                console.log('et ici ?')
             })
             return
         } else {
@@ -81,7 +78,6 @@ function deleteAllPost(user) {
                 include: [{ model: models.comment, as: "comment" }],
                 where: { uuidPost }
             })
-                .then(() => res.end())
                 .catch(err => res.status(500).json(err))
         })
             .catch(err => res.status(500).json(err))

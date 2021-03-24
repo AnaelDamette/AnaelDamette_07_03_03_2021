@@ -3,19 +3,6 @@ let models = require('../models');
 const fs = require('fs');
 
 
-function deleteImage(post) {
-    console.log("Nous somme dans bien dans update Image")
-    // supprimé l'image du registre 
-
-    const filename = post.attachement.split('/images/')[1];
-    console.log("Ici je supprime le file name  " + filename)
-    fs.unlink(`images/${filename}`, () => {
-        console.log("image bien supprimé")
-        return
-    })
-    return
-}
-
 exports.createMsg = (req, res, next) => {
     let uuid = req.params.uuid;
     console.log("Voici l'uuid : " + uuid)

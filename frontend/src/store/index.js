@@ -12,7 +12,7 @@ const store = new Vuex.Store({
       userID: 'Nc',
       email: 'Nc',
       token: null,
-      isAdmin: false,
+      isAdmin: 0,
     }
   },
   mutations: {
