@@ -43,6 +43,7 @@ export default {
   },
   methods: {
     getPost() {
+      this.allPosts = [],
       axios
         .get("http://localhost:3000/api/post")
         .then((response) => {
@@ -53,9 +54,9 @@ export default {
           console.log(error);
         });
     },
-    reload(reload){
+    reload(){
+      console.log("je reload depuis home")
       this.getPost()
-      console.log(reload)
     },
     deletePost(deleteUuidPost) {
       console.log("test : " + deleteUuidPost);

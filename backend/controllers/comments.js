@@ -39,18 +39,21 @@ exports.createComments = (req, res, next) => {
 
 exports.deleteComments = (req, res, next) => {
     console.log("test delete")
+    console.log(req.body.uuidComment)
     let userIsAdmin = req.body.userIsAdmin;
     let uuidComment = req.body.uuidComment;
     let uuid = req.params.uuid;
 
-    models.Comment.findOne({
+    models.comment.findOne({
         include: [{
             model: models.User, as: 'user',
         }],
         where: { uuidComment }
     })
         .then(comment => {
-            if (comment(userIsAdmin == 1 || comment.user.uuid == uuid)) {
+            console.log("j'ai trouvé le commentaire")
+            console.log(comment.user.uuid, "test comment.user.uuid")
+            if ( comment && (userIsAdmin == 1 || comment.user.uuid == uuid)) {
                 models.comment.destroy({
                     where: { uuidComment }
                 })

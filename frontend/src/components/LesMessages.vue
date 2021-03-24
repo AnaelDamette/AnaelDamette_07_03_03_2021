@@ -10,20 +10,18 @@
     v-bind:key="comment.id"
     :post="post"
     v-show="showModaleComment"
-    @ModaleComment="ModaleComment" />
+    @ModaleModifyComment="ModaleModifyComment" />
     <div
       class="bg-light rounded shadow-box m-2 p-3 d-flex flex-column justify-content-between"
     >
       <div class="jumbotron rounded shadow-box p-2">
         <p>{{ post.titre }}</p>
       </div>
-      <div class="d-flex">
-      <div class='col-6'>
-        <p>{{ post.message }}</p>
+      <div class="">
+        <figure class=""><img :src="post.attachement" class="w-50 m-2 rounded float-left" /></figure>
+        <figcaption><p class="text-justify">{{ post.message }}</p></figcaption>
       </div>
-        <figure class="rounded p-1 bg-dark"><img :src="post.attachement" class="w-100 rounded" /></figure>
-      </div>
-      <Comments v-show="showComment" :post="post"/>
+      <Comments v-show="showComment" :post="post" @showCommentMessage="showCommentMessage"/>
       <div class="d-flex justify-content-end">
         <button class="btn btn-primary m-2"
         @click="showModaleComment = !showModaleComment">
@@ -51,7 +49,7 @@
         >
           <i class="fas fa-ban"></i>
         </button>
-        <button @click='showComment = !showComment' class="btn btn-primary m-2">Commentaires</button>
+        <button @click='CommentMessage' class="btn btn-primary m-2">Commentaires</button>
       </div>
     </div>
   </div>
@@ -84,30 +82,49 @@ export default {
       comment: this.post,
       showModaleComment: false,
       showComment: false,
+      closeComment: true,
     };
   },
   computed: {
     ...mapState(["User"]),
   },
   methods: {
+    reload() {
+      this.$emit("reload");
+
+    },
     updateDeletePost() {
       const deleteUuidPost = this.post.uuidPost;
       console.log("test dans updateDeletePost : " + deleteUuidPost);
       this.$emit("deletePost", deleteUuidPost);
     },
     ModaleModify(showModaleModify) {
-      let reload = true;
       console.log(this.User);
       console.log("je suis dans modaleModify");
       this.showModaleModify = showModaleModify;
-      this.$emit("reload", reload);
+      this.reload()
     },
-    ModaleComment(showModaleComment) {
-      let reload = true;
+    ModaleModifyComment(showModaleComment) {
       console.log('je suis dans modaleComment')
       this.showModaleComment = showModaleComment
-      this.$emit("reload", reload)
-    }
+      this.reload()
+    },
+    showCommentMessage(closeComment){
+        this.closeComment = closeComment
+      this.CommentMessage()
+    },
+    CommentMessage(){
+      console.log("j'affiche/ je ferme les comments showComment = " + this.showComment)
+      if(this.closeComment == false) {
+        this.reload()
+        this.closeComment = true
+        }
+      else {this.showComment = !this.showComment}
+      
+      console.log(this.showComment)
+
+    },
+
   },
 };
 </script>

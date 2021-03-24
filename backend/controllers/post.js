@@ -62,7 +62,7 @@ exports.listMsg = (req, res, next) => {
     models.post.findAll({
         include: [
             { model: models.User, as: 'user' },
-            { model: models.comment, as: 'comment' }
+            { model: models.comment, as: 'comment', include: [{ model: models.User, as: 'user' }] }
         ],
         order: [['createdAt', 'DESC']]
     })

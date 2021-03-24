@@ -56,7 +56,7 @@ export default {
     toggleModaleComment() {
       let showModaleComment = false;
       console.log(showModaleComment);
-      this.$emit("ModaleComment", showModaleComment);
+      this.$emit("ModaleModifyComment", showModaleComment);
     },
     postComment() {
       console.log("test post comment");

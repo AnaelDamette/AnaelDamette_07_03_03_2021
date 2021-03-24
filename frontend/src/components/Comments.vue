@@ -2,29 +2,23 @@
   <div class="hello container ml-auto mr-auto mt-5">
     <div class="jumbotron p-2 m-2 d-flex flex-column rounded">
         <h2 class="text"> Commentaires : </h2>
-      <div
-        class="bg-light p-2 rounded shadow-box mb-1 w-100 d-flex justify-content-between"
-        v-for="comment in allComment"
+        <AffichageComments v-for="comment in allComment"
+        :comment="comment"
         v-bind:key="comment.message"
-      >
-        <p>{{ comment.message }}</p>
-        <button
-          @click="deleteComment"
-          class="btn btn-primary m-2"
-        >
-          <i class="fas fa-ban"></i>
-        </button>
-
-      </div>
+        @ShowComment="ShowComment" />
+      
     </div>
   </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
+import AffichageComments from './AffichageComments'
 
 export default {
   name: "Comments",
+  components: { AffichageComments,},
+  
   props: {
     post: {
       type: Object,
@@ -35,15 +29,21 @@ export default {
   data() {
     return {
       allComment: this.post.comment,
+      comment: {
+        type: Object
+      }
     };
   },
   computed: {
     ...mapState(["User"]),
   },
   methods: {
-      deleteComment() {
-          console.log('Delete Comment')
-      }
-  }
+    ShowComment(closeComment) {
+      console.log("je suis dans Comments closeComment = " + closeComment)
+      this.$emit("showCommentMessage", closeComment);
+    }
+      
+  },
+  
 };
 </script>
