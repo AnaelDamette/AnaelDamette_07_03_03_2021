@@ -1,5 +1,5 @@
 <template>
-  <div class="hello container ml-auto mr-auto mt-5">
+  <div class="hello container ml-auto mr-auto">
     <div class="jumbotron p-2 m-2 d-flex flex-column rounded">
         <h2 class="text"> Commentaires : </h2>
         <AffichageComments v-for="comment in allComment"

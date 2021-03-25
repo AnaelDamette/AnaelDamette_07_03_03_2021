@@ -14,22 +14,25 @@
     <div
       class="bg-light rounded shadow-box m-2 p-3 d-flex flex-column justify-content-between"
     >
-      <div class="jumbotron rounded shadow-box p-2">
+      <div class="jumbotron rounded shadow-box p-2 d-flex justify-content-between">
         <p>{{ post.titre }}</p>
+        <p>Posté par : {{ post.user.username}}</p>
       </div>
       <div class="">
         <figure class=""><img :src="post.attachement" class="w-50 m-2 rounded float-left" /></figure>
         <figcaption><p class="text-justify">{{ post.message }}</p></figcaption>
       </div>
-      <Comments v-show="showComment" :post="post" @showCommentMessage="showCommentMessage"/>
-      <div class="d-flex justify-content-end">
+      <div class='d-flex justify-content-between '>
+      <p class="d-flex align-items-center">Créer le : {{ this.postDate }}</p>
+      <div class="d-flex justify-content-end m-2 p-2">
+        
         <button class="btn btn-primary m-2"
         @click="showModaleComment = !showModaleComment">
           <i class="far fa-comments"></i>
         </button>
         <button
           v-if="
-            this.User.isAdmin == 1 || this.User.userID == this.post.user.uuid
+             this.User.userID == this.post.user.uuid
           "
           v-bind:post="post"
             @click="showModaleModify = !showModaleModify"
@@ -51,6 +54,9 @@
         </button>
         <button @click='CommentMessage' class="btn btn-primary m-2">Commentaires</button>
       </div>
+      
+      </div>
+      <Comments v-show="showComment" :post="post" @showCommentMessage="showCommentMessage"/>
     </div>
   </div>
 </template>
@@ -69,6 +75,7 @@ export default {
     Comments
   },
   props: {
+    
     post: {
       type: Object,
       message: String,
@@ -77,6 +84,7 @@ export default {
   },
   data() {
     return {
+      postDate: "",
       showModaleModify: false,
       modifPost: this.post,
       comment: this.post,
@@ -89,6 +97,11 @@ export default {
     ...mapState(["User"]),
   },
   methods: {
+    AfficheDate(){
+      let createdAt = new Date(this.post.createdAt)
+      this.postDate = createdAt.toLocaleDateString()
+
+    },
     reload() {
       this.$emit("reload");
 
@@ -126,5 +139,8 @@ export default {
     },
 
   },
+  beforeMount() {
+    this.AfficheDate()
+  }
 };
 </script>

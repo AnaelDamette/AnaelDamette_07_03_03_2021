@@ -1,8 +1,12 @@
 <template>
   <div
-    class="bg-light p-2 rounded shadow-box mb-1 w-100 d-flex justify-content-between"
+    class="bg-light p-2 rounded shadow-box mb-1 w-100 d-flex flex-column justify-content-between"
   >
-    <p>{{ comment.message }}</p>
+    <p class="text-comment">{{ comment.message }}</p>
+    <div class="d-flex justify-content-between align-items-center">
+      <p class="text-comment">Posté par <strong>{{ comment.user.username }}</strong></p>
+      <div class="d-flex align-items-end">
+      <p class="text-comment">Créer le : {{ postDate}} </p>
     <button
       @click="deleteComment"
       v-if="controleComment == true"
@@ -10,6 +14,8 @@
     >
       <i class="fas fa-ban"></i>
     </button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -26,6 +32,7 @@ export default {
   },
   data() {
     return {
+       postDate: "",
       controleComment: true,
     };
   },
@@ -48,7 +55,14 @@ export default {
         })
         .catch((error) => console.log(error));
     },
+    AfficheDate(){
+      let createdAt = new Date(this.comment.createdAt)
+      this.postDate = createdAt.toLocaleDateString()
+
+    },
   },
+  
+    
   Mounted() {
     if (this.User.isAdmin == 1 || this.User.userID == this.comment.user.uuid) {
       this.controleComment = true;
@@ -56,5 +70,11 @@ export default {
       this.controleComment = false;
     }
   },
+   beforeMount() {
+    this.AfficheDate()
+  }
 };
 </script>
+<style scoped>
+
+</style>
