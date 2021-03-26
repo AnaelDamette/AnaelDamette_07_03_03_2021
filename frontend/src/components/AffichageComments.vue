@@ -3,7 +3,7 @@
     class="bg-light p-2 rounded shadow-box mb-1 w-100 d-flex flex-column justify-content-between"
   >
     <p class="text-comment">{{ comment.message }}</p>
-    <div class="d-flex justify-content-between align-items-center">
+    <div class="d-flex justify-content-between align-items-center flex-md-row flex-column">
       <p class="text-comment">Posté par <strong>{{ comment.user.username }}</strong></p>
       <div class="d-flex align-items-end">
       <p class="text-comment">Créer le : {{ postDate}} </p>

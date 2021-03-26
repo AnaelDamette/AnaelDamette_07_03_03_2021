@@ -68,6 +68,7 @@ export default {
           .then((response) => {
             localStorage.setItem("token", response.data.token);
             localStorage.setItem("uuid", response.data.uuid);
+            localStorage.setItem('isAdmin', response.data.isAdmin)
             store.commit("saveToken");
             console.log("test uuid" + response.data.uuid)
             store.commit("saveUserInfos", [response.data.username, response.data.uuid, response.data.email, response.data.isAdmin])

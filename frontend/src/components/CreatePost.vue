@@ -8,7 +8,7 @@
       action=""
       class="row d-flex flex-column jumbotron rounded shadow-box p-3 m-4"
     >
-      <div class="d-flex flex-column form-group p-3">
+      <div class="d-flex flex-column col-12 form-group p-3">
         <div
           class="d-flex justify-content-start bg-dark rounded shadow-box pt-2 pl-3"
         >
@@ -24,7 +24,7 @@
           placeholder="Ecris ici ton titre"
         />
       </div>
-      <div class="d-flex flex-column form-group p-3">
+      <div class="d-flex flex-column col-12 form-group p-3">
         <div
           class="d-flex justify-content-start bg-dark rounded shadow-box pt-2 pl-3"
         >
@@ -42,15 +42,16 @@
         ></textarea>
       </div>
       <input
+      class="col-12"
         name="inputFile"
         type="file"
         id="inputFile"
         @change="onFileChange"
       />
-      <div class="d-flex form-group justify-content-end">
+      <div class="d-flex form-group mt-2 col-12 justify-content-end">
         <input
           type="submit"
-          class="btn btn-primary w-25"
+          class="btn btn-primary md-w-25"
           @click.prevent="createPost"
           value="Submit"
         />

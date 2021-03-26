@@ -9,10 +9,10 @@ const store = new Vuex.Store({
   state: {
     User: {
       username: 'Nc',
-      userID: 'Nc',
+      userID: localStorage.getItem('uuid'),
       email: 'Nc',
-      token: null,
-      isAdmin: 0,
+      token: localStorage.getItem("token"),
+      isAdmin: localStorage.getItem('isAdmin'),
     }
   },
   mutations: {
