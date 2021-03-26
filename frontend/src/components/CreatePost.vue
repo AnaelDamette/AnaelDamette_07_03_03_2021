@@ -71,7 +71,9 @@ export default {
       contentPost: {
         message: null,
         titre: null,
-        image: null
+        image: {
+          name:'NC'
+        }
       },
       msgError: "",
     };
@@ -83,7 +85,8 @@ export default {
     createPost() {
       console.log(this.contentPost);
       const fd = new FormData();
-      fd.append("image", this.contentPost.image, this.contentPost.image.name);
+      if(this.contentPost.image.name != 'NC'){fd.append("image", this.contentPost.image, this.contentPost.image.name);}
+      
       fd.append("message", this.contentPost.message)
       fd.append("titre", this.contentPost.titre)
       let uuid = localStorage.getItem("uuid");

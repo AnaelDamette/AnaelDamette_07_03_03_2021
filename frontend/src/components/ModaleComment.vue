@@ -7,12 +7,12 @@
       </div>
       <form>
         <div class="form-group">
-          <label for="inputNewComment">Entrez un commentaire</label>
+          <label :for="'inputNewComment'+ post.uuidPost">Entrez un commentaire pour {{post.titre}}</label>
           <textarea
             type="message"
             class="form-control"
             rows="8"
-            id="inputNewComment"
+            :id="'inputNewComment'+ post.uuidPost"
             v-model="comment.message"
           />
         </div>

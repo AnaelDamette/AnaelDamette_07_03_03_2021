@@ -5,24 +5,24 @@
       <div @click="toggleModifyModale" class="btn-modale btn btn-danger">X</div>
       <form>
         <div class="form-group">
-          <label for="inputNewTitre">Entrez un nouveau titre</label>
-          <input type="titre" class="form-control" id="inputNewTitre" v-model="newPost.newTitre" />
+          <label :for="modifPost.uuidPost + 'inputNewTitre'">Entrez un nouveau titre pour {{newPost.newTitre}}</label>
+          <input type="titre" class="form-control" :id="modifPost.uuidPost + 'inputNewTitre'" v-model="newPost.newTitre" />
         </div>
         <div class="form-group">
-          <label for="inputNewMessage">Entrez un nouveau message</label>
+          <label :for="modifPost.uuidPost + 'inputNewMessage'">Entrez un nouveau message <p v-show="false">pour :{{newPost.newTitre}}</p></label>
           <textarea
             type="message"
             class="form-control"
             rows="8"
-            id="inputNewMessage"
+            :id="modifPost.uuidPost + 'inputNewMessage'"
             v-model="newPost.newMessage"
           />
         </div>
-        <label for="inputFile" v-show="false">Entrez un nouveau message</label>
+        <label :for="modifPost.uuidPost + 'inputFile'" v-show="false">Entrez une nouvelle image pour : {{newPost.newTitre}}</label>
         <input
           name="inputFile"
           type="file"
-          id="inputFile"
+          :id="modifPost.uuidPost + 'inputFile'"
           @change="onFileChange"
         />
         <button
