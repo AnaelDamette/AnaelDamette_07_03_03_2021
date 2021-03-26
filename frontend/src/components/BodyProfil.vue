@@ -86,6 +86,7 @@ export default {
         .get("http://localhost:3000/api/post/mesMessages/" + uuid)
         .then((response) => {
           this.allPostsUser = response.data.post;
+          console.log(response)
         })
         .catch((error) => {
           console.log(error);

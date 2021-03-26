@@ -28,8 +28,8 @@
         <div
           class="d-flex justify-content-start bg-dark rounded shadow-box pt-2 pl-3"
         >
-          <label for="input_text" class="">
-            <p class="text-secondary">Ensuite votre joli message !</p></label
+          <label for="input_text" class="text-secondary">
+           Ensuite votre joli message !</label
           >
         </div>
         <textarea
@@ -41,6 +41,7 @@
           placeholder="Ecris ici ton message"
         ></textarea>
       </div>
+      <label for="inputFile" v-show="false">Entrez un nouveau message</label>
       <input
       class="col-12"
         name="inputFile"

@@ -8,9 +8,9 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
   state: {
     User: {
-      username: 'Nc',
+      username: localStorage.getItem("username"),
       userID: localStorage.getItem('uuid'),
-      email: 'Nc',
+      email: localStorage.getItem('email'),
       token: localStorage.getItem("token"),
       isAdmin: localStorage.getItem('isAdmin'),
     }

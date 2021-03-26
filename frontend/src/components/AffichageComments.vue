@@ -12,7 +12,7 @@
       v-if="controleComment == true"
       class="btn btn-primary m-2"
     >
-      <i class="fas fa-ban"></i>
+      <i class="fas fa-ban"><p v-show="false ">Delete </p></i>
     </button>
       </div>
     </div>

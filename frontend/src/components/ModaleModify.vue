@@ -5,18 +5,20 @@
       <div @click="toggleModifyModale" class="btn-modale btn btn-danger">X</div>
       <form>
         <div class="form-group">
-          <label for="InputNewTitre">Entrez un nouveau titre</label>
-          <input type="titre" class="form-control" v-model="newPost.newTitre" />
+          <label for="inputNewTitre">Entrez un nouveau titre</label>
+          <input type="titre" class="form-control" id="inputNewTitre" v-model="newPost.newTitre" />
         </div>
         <div class="form-group">
-          <label for="InputNewMessage">Entrez un nouveau message</label>
+          <label for="inputNewMessage">Entrez un nouveau message</label>
           <textarea
             type="message"
             class="form-control"
             rows="8"
+            id="inputNewMessage"
             v-model="newPost.newMessage"
           />
         </div>
+        <label for="inputFile" v-show="false">Entrez un nouveau message</label>
         <input
           name="inputFile"
           type="file"

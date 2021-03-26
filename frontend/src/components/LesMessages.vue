@@ -23,7 +23,7 @@
       </div>
       <div class="">
         <figure class="">
-          <img :src="post.attachement" class="w-50 m-2 rounded float-left" />
+          <img :src="post.attachement" v-bind:alt="post.titre" class="w-50 m-2 rounded float-left" />
         </figure>
         <figcaption>
           <p class="text-justify">{{ post.message }}</p>
@@ -36,7 +36,7 @@
             class="btn btn-primary m-2"
             @click="showModaleComment = !showModaleComment"
           >
-            <i class="far fa-comments"></i>
+            <i class="far fa-comments "><p v-show="false" class="invisible">comments</p></i>
           </button>
           <button
             v-if="this.User.userID == this.post.user.uuid"
@@ -44,7 +44,7 @@
             @click="showModaleModify = !showModaleModify"
             class="btn btn-primary m-2"
           >
-            <i class="fas fa-comment-dots"></i>
+            <i class="fas fa-comment-dots"><p v-show="false"> Modifier</p></i>
           </button>
           <button
             v-if="
@@ -53,7 +53,7 @@
             @click="updateDeletePost"
             class="btn btn-primary m-2"
           >
-            <i class="fas fa-ban"></i>
+            <i class="fas fa-ban"><p v-show="false ">Delete </p></i>
           </button>
           <button @click="CommentMessage" class="btn btn-primary m-2">
             Commentaires
