@@ -56,7 +56,17 @@ const routes = [
       requiresAuth: true,
       isAdmin: true
     }
-  }
+  },
+  {
+    path: '*',
+    name: 'Introuvable',
+    component: () => import(/* webpackChunkName: "post" */ '../views/Introuvable.vue'),
+  },
+  {
+    path: '/interdit',
+    name: 'Interdit',
+    component: () => import(/* webpackChunkName: "post" */ '../views/Interdit.vue'),
+  },
 ]
 
 const router = new VueRouter({
@@ -69,7 +79,7 @@ router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
     if (!localStorage.getItem('token')) {
       next({
-        path: '/login',
+        path: '/interdit',
         params: { nextUrl: to.fullPath }
       })
     } else {
