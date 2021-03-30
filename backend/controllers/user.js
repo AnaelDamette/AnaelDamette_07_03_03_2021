@@ -34,57 +34,57 @@ function deleteAllPost(user) {
   console.log("j'suis bien ici ?")
   console.log(user)
   //selection les posts et lance la boucle forEach
-    models.post.findAll({
-        where: { userId: user.id }
+  models.post.findAll({
+    where: { userId: user.id }
+  })
+    .then((response) => {
+      console.dir(response + "   pourquoi ici ?")
+      if (response.length > 0) {
+        response.forEach(post => {
+          deleteAllArrayPost(post)
+        })
+        return
+      } else { return }
+
     })
-        .then((response) => {
-            console.dir(response + "   pourquoi ici ?")
-            if (response.length > 0) {
-                response.forEach(post => {
-                    deleteAllArrayPost(post)
-                })
-                return
-            } else { return }
-  
-        })
-  }
-  
-  function deleteAllArrayPost(post) {
-    //supprime le post dans la boucle
-    let uuidPost = post.uuidPost
-    if (post) {
-        if (post.attachement) {
-            const filename = post.attachement.split('/images/')[1];
-            console.log("j'ai supprimé le file name  ")
-            fs.unlink(`images/${filename}`, () => {
-  
-                models.comment.destroy({
-                  where: { postId: post.id }
-              }).then(() => {
-                  models.post.destroy({
-                      include: [{ model: models.comment, as: "comment" }],
-                      where: { uuidPost }
-                  })
-                      .catch(err => res.status(500).json(err))
-              })
-                  .catch(err => res.status(500).json(err))
-            })
-            return
-        } else {
-          models.comment.destroy({
-            where: { postId: post.id }
+}
+
+function deleteAllArrayPost(post) {
+  //supprime le post dans la boucle
+  let uuidPost = post.uuidPost
+  if (post) {
+    if (post.attachement) {
+      const filename = post.attachement.split('/images/')[1];
+      console.log("j'ai supprimé le file name  ")
+      fs.unlink(`images/${filename}`, () => {
+
+        models.comment.destroy({
+          where: { postId: post.id }
         }).then(() => {
-            models.post.destroy({
-                include: [{ model: models.comment, as: "comment" }],
-                where: { uuidPost }
-            })
-                .catch(err => res.status(500).json(err))
-        })
+          models.post.destroy({
+            include: [{ model: models.comment, as: "comment" }],
+            where: { uuidPost }
+          })
             .catch(err => res.status(500).json(err))
-            return
-        }
-    } else { return }
-  }
+        })
+          .catch(err => res.status(500).json(err))
+      })
+      return
+    } else {
+      models.comment.destroy({
+        where: { postId: post.id }
+      }).then(() => {
+        models.post.destroy({
+          include: [{ model: models.comment, as: "comment" }],
+          where: { uuidPost }
+        })
+          .catch(err => res.status(500).json(err))
+      })
+        .catch(err => res.status(500).json(err))
+      return
+    }
+  } else { return }
+}
 
 exports.signup = (req, res, next) => {
   // Valider les paramètres de la requète
@@ -216,9 +216,12 @@ exports.deleteProfile = (req, res, next) => {
         console.log(user.id)
         deleteAllPost(user)
         console.log("supression user")
-        models.User.destroy({ where: { uuid } })
-          .then(() => res.end())
-          .catch(err => console.log(err))
+          .then(() => {
+            models.User.destroy({ where: { uuid } })
+            .then(() => res.end())
+            .catch(err => console.log(err))
+          })
+
 
 
           .catch(err => res.status(500).json(err))
