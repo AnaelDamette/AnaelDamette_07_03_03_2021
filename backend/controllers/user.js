@@ -29,26 +29,6 @@ function encrypt(text) {
 }
 
 
-
-function deleteAllPost(user) {
-  console.log("j'suis bien ici ?")
-  console.log(user)
-  //selection les posts et lance la boucle forEach
-  models.post.findAll({
-    where: { userId: user.id }
-  })
-    .then((response) => {
-      console.dir(response + "   pourquoi ici ?")
-      if (response.length > 0) {
-        response.forEach(post => {
-          deleteAllArrayPost(post)
-        })
-        return
-      } else { return }
-
-    })
-}
-
 function deleteAllArrayPost(post) {
   //supprime le post dans la boucle
   let uuidPost = post.uuidPost
@@ -212,19 +192,35 @@ exports.deleteProfile = (req, res, next) => {
       console.log("test " + user)
       if (user != null && (user.uuid == uuid || userIsAdmin == 1)) {
         //supprimé les attachement des posts puis les posts !
-        console.log("test du Usericitte ")
-        console.log(user.id)
-        deleteAllPost(user)
-        console.log("supression user")
-          .then(() => {
-            models.User.destroy({ where: { uuid } })
-            .then(() => res.end())
+
+        
+  console.log("je suppose que req.body est undefined")
+  console.log(user)
+  let uuid = user.uuid;
+  console.log("j'suis bien ici ?")
+  //selection les posts et lance la boucle forEach
+  models.post.findAll({
+    where: { userId: user.id }
+  })
+    .then((response) => {
+      console.dir(response + "   pourquoi ici ?")
+      if (response.length > 0) {
+        response.forEach(post => {
+          deleteAllArrayPost(post)
+        })
+        models.User.destroy({ where: { uuid } })
             .catch(err => console.log(err))
-          })
+            .then(() => res.end())
+      } else { 
+        models.User.destroy({ where: { uuid } })
+            .catch(err => console.log(err))
+            .then(() => res.end())
+
+    }
+  })
 
 
 
-          .catch(err => res.status(500).json(err))
       } else {
         res.status(401).json({ error: "Cet user n'existe pas" })
       }
