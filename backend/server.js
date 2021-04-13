@@ -46,4 +46,3 @@ const normalizePort = val => {
   });
   
   server.listen(port);
-  
